@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Smart Job Guard{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script>
+    // dark mode toggle
+    function toggleDark() {
+      document.body.classList.toggle('dark');
+      if (document.body.classList.contains('dark')) {
+        localStorage.setItem('darkmode','yes');
+      } else {
+        localStorage.removeItem('darkmode');
+      }
+    }
+    document.addEventListener('DOMContentLoaded',function(){
+      if(localStorage.getItem('darkmode')){
+        document.body.classList.add('dark');
+      }
+    });
+  </script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="/">Smart Job Guard</a>
+    </div>
+    <div class="nav-right">
+      {% if session.user_id %}
+        <a href="/dashboard">Dashboard</a>
+        {% if session.is_admin %}<a href="/admin">Admin</a>{% endif %}
+        <a href="/logout">Logout</a>
+      {% else %}
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+      {% endif %}
+      <button class="dark-toggle" onclick="toggleDark()">🌓</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, msg in messages %}
+        <div class="flash {{ category }}">{{ msg }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

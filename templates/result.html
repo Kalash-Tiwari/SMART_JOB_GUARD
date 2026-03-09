@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Job Fit Result – Smart Job Guard{% endblock %}
+{% block content %}
+  <h1>Analysis Result</h1>
+
+  <div class="card">
+    <h2>Job Fit Score: <span class="score">{{ score }}%</span></h2>
+    <p><strong>Matched skills:</strong> {% if matched %}{{ matched|join(', ') }}{% else %}None{% endif %}</p>
+    <p><strong>Missing skills:</strong> {% if missing %}{{ missing|join(', ') }}{% else %}None{% endif %}</p>
+  </div>
+
+  <div class="card">
+    <h3>Fake Job Risk: <span class="risk {{ risk|lower }}">{{ risk }}</span></h3>
+    <p><strong>Detected red flags:</strong> {% if flags %}{{ flags|join(', ') }}{% else %}None{% endif %}</p>
+  </div>
+
+  <div class="card small">
+    <p><strong>Resume-extracted skills:</strong> {% if resume_skills %}{{ resume_skills|join(', ') }}{% else %}None{% endif %}</p>
+    <p><strong>Job-extracted skills:</strong> {% if job_skills %}{{ job_skills|join(', ') }}{% else %}None{% endif %}</p>
+  </div>
+
+  <a class="btn" href="/dashboard">&larr; Back to Dashboard</a>
+{% endblock %}

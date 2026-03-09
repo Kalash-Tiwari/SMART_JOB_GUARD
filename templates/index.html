@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Home – Smart Job Guard{% endblock %}
+{% block content %}
+  <h1>Smart Job Guard</h1>
+  <p>Paste your resume and a job description to analyze fit and risk.</p>
+  <form action="/analyze" method="post" enctype="multipart/form-data">
+    <div class="form-row">
+      <label>Upload resume file</label>
+      <input type="file" name="resume_file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
+    </div>
+    <div class="form-row">
+      <label>Job description</label>
+      <textarea name="job" placeholder="Paste job description here" rows="12"></textarea>
+    </div>
+    <button type="submit">Analyze</button>
+  </form>
+  <footer>Simple keyword-based skill matching & rule-based fake job detection.</footer>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Admin – Smart Job Guard{% endblock %}
+{% block content %}
+  <h1>Admin Dashboard</h1>
+  <p><a href="/dashboard">Back to Dashboard</a> | <a href="/logout">Logout</a></p>
+
+  <div class="card">
+    <h3>Users</h3>
+    <ul>
+      {% for u in users %}
+        <li>{{ u.email }} — {{ u.name or '—' }} — admin: {{ 'yes' if u.is_admin else 'no' }} — created {{ u.created_at.strftime('%Y-%m-%d') }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Resumes</h3>
+    <ul>
+      {% for r in resumes %}
+        <li>User {{ r.user.email }} — {% if r.filename %}<a href="/uploads/{{ r.filename }}">{{ r.filename }}</a>{% else %}pasted text{% endif %} — {{ r.uploaded_at.strftime('%Y-%m-%d') }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Applications</h3>
+    <ul>
+      {% for a in applications %}
+        <li>User {{ a.user.email }} — {{ a.company }} — {{ a.status }} — {{ a.created_at.strftime('%Y-%m-%d') }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – Smart Job Guard{% endblock %}
+{% block content %}
+  <h1>Welcome, {{ user.name or user.email }}</h1>
+
+  <!-- tab navigation -->
+  <div class="tabs">
+    <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">Resume Analyzer</a>
+    <a href="/resume_builder" class="{% if request.path == '/resume_builder' %}active{% endif %}">Resume Builder</a>
+  </div>
+
+  <div class="row">
+    <div class="main">
+      <div class="card">
+        <h3>Upload resume</h3>
+        <form action="/upload_resume" method="post" enctype="multipart/form-data">
+          <div class="form-row">
+            <label>File (pdf, doc, docx, png, jpg)</label>
+            <input type="file" name="file">
+          </div>
+          <button type="submit">Upload</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Analyze for Job Fit</h3>
+        <form action="/analyze" method="post" enctype="multipart/form-data">
+          <div class="form-row">
+            <label>Use an uploaded resume</label>
+            <select name="resume_id">
+              <option value="">-- none --</option>
+              {% for r in resumes %}
+                <option value="{{ r.id }}">{{ r.filename or '(pasted)'}} — {{ r.uploaded_at.strftime('%Y-%m-%d') }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Or upload resume file (one-time)</label>
+            <input type="file" name="resume_file">
+          </div>
+          <!-- pasted resume text removed: analyzer accepts only uploaded files -->
+          <div class="form-row">
+            <label>Job description</label>
+            <textarea name="job" rows="6"></textarea>
+          </div>
+          <button type="submit">Analyze</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Your resumes</h3>
+        {% if resumes %}
+          <ul>
+            {% for r in resumes %}
+              <li>
+                {% if r.filename %}<a href="/uploads/{{ r.filename }}">{{ r.filename }}</a>{% else %}No file{% endif %}
+                — uploaded {{ r.uploaded_at.strftime('%Y-%m-%d %H:%M') }}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No resumes uploaded yet.</p>
+        {% endif %}
+      </div>
+
+
+
+      <div class="card">
+        <h3>Your applications</h3>
+        {% if applications %}
+          <ul>
+            {% for a in applications %}
+              <li>{{ a.company }} — {{ a.status }} — {{ a.created_at.strftime('%Y-%m-%d') }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No applications recorded yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="card">
+        <h3>Live Job Openings</h3>
+        <div class="job-card"><strong>Software Developer</strong> – Mumbai</div>
+        <div class="job-card"><strong>Data Analyst</strong> – Bangalore</div>
+        <div class="job-card"><strong>Web Designer</strong> – Pune</div>
+        <div class="job-card marquee"><span>Hiring now! Check back frequently for new openings.</span></div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

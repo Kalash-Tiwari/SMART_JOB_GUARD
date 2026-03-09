@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Register – Smart Job Guard{% endblock %}
+{% block content %}
+  <h1>Create Account</h1>
+  <form method="post">
+    <div class="form-row">
+      <label>Name</label>
+      <input type="text" name="name" placeholder="Full name">
+    </div>
+    <div class="form-row">
+      <label>Email</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+    </div>
+    <div class="form-row">
+      <label>Password</label>
+      <input type="password" name="password" required>
+    </div>
+    <button type="submit">Register</button>
+  </form>
+  <p>Already have an account? <a href="/login">Login</a></p>
+{% endblock %}

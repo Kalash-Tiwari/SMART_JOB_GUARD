@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Login – Smart Job Guard{% endblock %}
+{% block content %}
+  <h1>Login</h1>
+  <form method="post">
+    <div class="form-row">
+      <label>Email</label>
+      <input type="email" name="email" required>
+    </div>
+    <div class="form-row">
+      <label>Password</label>
+      <input type="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+  </form>
+  <p>No account? <a href="/register">Create one</a></p>
+{% endblock %}

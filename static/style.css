@@ -1,0 +1,90 @@
+*{
+  box-sizing:border-box;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+body{
+  background:#f3f6fb;
+  color:#111;
+  margin:0;
+  padding:0;
+}
+.container{
+  max-width:960px;
+  margin:0 auto;
+  padding:24px 16px;
+}
+h1,h2,h3{margin:0 0 12px;}
+.navbar{
+  background:#0b63d6;
+  color:#fff;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+}
+.navbar a{color:#fff;text-decoration:none;margin-right:12px;font-weight:600;}
+.navbar a:hover{text-decoration:underline;}
+.dark-toggle{background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer;}
+.form-row label{display:block;margin-top:12px;font-weight:600}
+.form-row input[type="text"],
+.form-row input[type="email"],
+.form-row input[type="password"],
+.form-row input[type="file"],
+.form-row textarea{width:100%;padding:10px;margin-top:6px;border-radius:6px;border:1px solid #cfd8e3;}
+textarea{min-height:120px;}
+button{margin-top:12px;padding:10px 14px;border:0;border-radius:6px;background:#0b63d6;color:#fff;font-weight:600;cursor:pointer;transition:background 0.2s;}
+button:hover{background:#0954a5;}
+.card{background:#fff;padding:20px;border-radius:10px;margin-top:18px;border:1px solid #e3e9f2;box-shadow:0 2px 4px rgba(0,0,0,0.04);transition:transform 0.15s;}
+.card:hover{transform:translateY(-2px);}
+.card.small{font-size:0.95em;}
+.score{color:#0b63d6;font-weight:700;}
+.risk.low{color:green;}
+.risk.medium{color:#e07b00;}
+.risk.high{color:#d9534f;}
+.btn{display:inline-block;margin-top:14px;text-decoration:none;padding:8px 12px;background:#eee;border-radius:6px;color:#333;}
+.btn:hover{background:#ddd;}
+footer{margin-top:20px;color:#666;font-size:0.9em;text-align:center;}
+/* Dark mode */
+body.dark{background:#0f1720;color:#e6eef8;}
+body.dark .navbar{background:#122237;}
+body.dark .card{background:#0b1220;border-color:#122237;}
+body.dark textarea, body.dark input{background:#07101b;color:#e6eef8;border-color:#122237;}
+/* flash messages */
+.flash{padding:8px 12px;margin-top:12px;border-radius:6px;}
+.flash.success{background:#e6f4ea;color:#0b6b28;}
+.flash.error{background:#fdecea;color:#8b1d1d;}
+.flash.info{background:#eef6ff;color:#0b3a66;}
+
+/* tab navigation for dashboard pages */
+.tabs{margin-top:20px;border-bottom:2px solid #e3e9f2;}
+.tabs a{display:inline-block;padding:10px 16px;margin-right:4px;text-decoration:none;color:#0b63d6;font-weight:600;border:1px solid transparent;border-bottom:none;}
+.tabs a.active{background:#fff;border-color:#e3e9f2 #e3e9f2 #fff;}
+
+/* layout for main content and sidebar */
+.row{display:flex;flex-wrap:wrap;}
+.main{flex:1 1 65%;padding-right:20px;}
+.sidebar{flex:0 0 30%;}
+
+/* job card styling */
+.job-card{background:#fff;padding:10px;border-radius:6px;margin-bottom:10px;border:1px solid #e3e9f2;}
+.job-card strong{color:#0b63d6;}
+.job-card.marquee{overflow:hidden;white-space:nowrap;}
+.job-card.marquee span{display:inline-block;padding-left:100%;animation:marquee 10s linear infinite;}
+@keyframes marquee{0%{transform:translate(0,0);}100%{transform:translate(-100%,0);}}
+
+/* simple resume preview styles (template classes can override) */
+.resume-preview{background:#fff;padding:20px;border:1px solid #e3e9f2;border-radius:8px;margin-top:20px;}
+.resume-preview h2{margin-bottom:8px;}
+
+/* example template variations */
+.modern-professional-template { font-family: 'Segoe UI', sans-serif; }
+.clean-minimal-template { font-family: 'Arial', sans-serif; color:#333; }
+.executive-format { font-family: 'Times New Roman', serif; }
+/* other template-specific classes can be added similarly */
+
+/* dark mode adjustments for new elements */
+body.dark .tabs a{color:#a3c4f3;}
+body.dark .tabs a.active{background:#0b1220;border-color:#122237 #122237 #0b1220;}
+body.dark .job-card{background:#0b1220;border-color:#122237;}
+body.dark .resume-preview{background:#0b1220;border-color:#122237;}
+
