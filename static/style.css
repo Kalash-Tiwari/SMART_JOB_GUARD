@@ -21,7 +21,7 @@ body{
 h1, h2, h3 {
   color: var(--heading-color);
 }
-body.theme-red { --text-color: #3a1a1a; background: #fff2f2; --primary-border: #da7171; --accent: #b53939; }
+body.theme-red { --text-color: #371313; background: #fff2f2; --primary-border: #da7171; --accent: #b53939; }
 body.theme-green { --text-color: #123524;background: #f3fff5; --primary-border: #79b095; --accent: #2a8c57; }
 body.theme-pink {  --text-color: #4a1f35; background: #fff4f8; --primary-border: #df8cbc; --accent: #d14576; }
 body.theme-blue {  --text-color: #1a2f5a; background: #f1f5ff; --primary-border: #93bffc; --accent: #2e68c9; }
