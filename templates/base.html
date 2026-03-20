@@ -49,6 +49,7 @@
     });
   </script>
 </head>
+<script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 <body>
   <nav class="navbar">
     <div class="nav-left">
@@ -82,4 +83,17 @@
     {% block content %}{% endblock %}
   </div>
 </body>
+<div class="navbar">
+  <h2>Smart Job Guard</h2>
+
+  <div class="theme-picker">
+    <div class="theme-dot" style="background:#ff7f7f" onclick="setTheme('theme-red')"></div>
+    <div class="theme-dot" style="background:#2ec26a" onclick="setTheme('theme-green')"></div>
+    <div class="theme-dot" style="background:#3a78d7" onclick="setTheme('theme-blue')"></div>
+    <div class="theme-dot" style="background:#7b5dd4" onclick="setTheme('theme-purple')"></div>
+    <div class="theme-dot" style="background:#f88c1b" onclick="setTheme('theme-orange')"></div>
+    <div class="theme-dot" style="background:#ee6fa0" onclick="setTheme('theme-pink')"></div>
+    <div class="theme-dot" style="background:#2f3a50" onclick="setTheme('theme-dark')"></div>
+  </div>
+</div>
 </html>

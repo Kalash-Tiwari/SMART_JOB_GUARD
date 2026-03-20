@@ -26,7 +26,7 @@ body.theme-dark { background: #111827; --primary-border: #2f3f5d; --accent: #4d9
 }
 h1,h2,h3{margin:0 0 12px;}
 .navbar{
-  background:#0b63d6;
+  background:var(--accent);
   color:#fff;
   display:flex;
   justify-content:space-between;
@@ -45,7 +45,8 @@ h1,h2,h3{margin:0 0 12px;}
 textarea{min-height:120px;}
 button{margin-top:12px;padding:10px 14px;border:0;border-radius:6px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;transition:background 0.2s;}
 button:hover{background:rgba(0,0,0,0.15);}
-.card{background:#fff;padding:20px;border-radius:10px;margin-top:18px;border:1px solid #e3e9f2;box-shadow:0 2px 4px rgba(0,0,0,0.04);transition:transform 0.15s;}
+.card{background: var(--primary-bg);
+  border: 1px solid var(--primary-border);padding:20px;border-radius:10px;margin-top:18px;border:1px solid #e3e9f2;box-shadow:0 2px 4px rgba(0,0,0,0.04);transition:transform 0.15s;}
 .card:hover{transform:translateY(-2px);}
 .card.small{font-size:0.95em;}
 .score{color:#0b63d6;font-weight:700;}
