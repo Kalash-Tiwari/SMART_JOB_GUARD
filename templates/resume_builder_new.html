@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}Resume Builder – Smart Job Guard{% endblock %}
+{% block content %}
+<div class="resume-builder-shell">
+  <aside class="template-sidebar">
+    <h2>Templates</h2>
+    <div class="template-tabs">
+      <button class="tab-btn active" data-filter="all">All</button>
+      <button class="tab-btn" data-filter="ats">ATS-Friendly</button>
+      <button class="tab-btn" data-filter="modern">Modern</button>
+      <button class="tab-btn" data-filter="minimal">Minimal</button>
+    </div>
+    <div id="templateList" class="template-list"></div>
+  </aside>
+
+  <main class="template-editor-panel">
+    <div class="editor-topbar">
+      <button class="btn btn-secondary" onclick="saveDraft()">Save Draft</button>
+      <button class="btn btn-primary" onclick="window.location.href='/resume_builder/edit?template=' + encodeURIComponent(selectedTemplate || 'Modern Professional Template')">Export PDF</button>
+      <button class="btn" onclick="toggleDark()">Toggle Dark Mode</button>
+    </div>
+
+    <div class="builder-grid">
+      <div class="builder-form">
+        <h3>Quick Start Form</h3>
+        <form id="quickResumeForm" onsubmit="return false;">
+          <label>Name<input type="text" id="quick-name" oninput="syncPreview()" placeholder="Your Name"></label>
+          <small>Use your full name and professional title.</small>
+          <label>Email<input type="email" id="quick-email" oninput="syncPreview()" placeholder="you@example.com"></label>
+          <small>Incorporate domain-specific keywords in summary.</small>
+          <label>Experience<textarea id="quick-experience" rows="4" oninput="syncPreview()" placeholder="Your latest roles, 3-4 bullets"></textarea></label>
+          <small>Use bullet points for experience.</small>
+          <label>Skills<textarea id="quick-skills" rows="3" oninput="syncPreview()" placeholder="Python, SQL, ..."></textarea></label>
+          <small>Add 5–8 hard skills for ATS.</small>
+          <label>Education<input type="text" id="quick-education" oninput="syncPreview()" placeholder="Degree and institution"></label>
+          <small>Include year and program.</small>
+        </form>
+      </div>
+
+      <div class="builder-preview">
+        <h3>Live Resume Preview</h3>
+        <div class="resume-preview" id="builderPreview"></div>
+        <div class="theme-customizer">
+          <span>Theme:</span>
+          <button class="color-dot color-navy active" data-color="#1d4b8f"></button>
+          <button class="color-dot color-teal" data-color="#0fb9a5"></button>
+          <button class="color-dot color-purple" data-color="#6c49e2"></button>
+          <button class="color-dot color-orange" data-color="#f27422"></button>
+          <button class="color-dot color-green" data-color="#1f9e5a"></button>
+        </div>
+        <div class="font-picker">
+          <label>Font style: <select id="fontStyle" onchange="syncPreview();"><option value="Classic">Classic</option><option value="Modern">Modern</option><option value="Compact">Compact</option></select></label>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const templates = {{ templates|tojson|safe }};
+  let selectedTemplate = templates[0];
+  const templateTags = {
+    "Modern Professional Template": "modern",
+    "Clean Minimal Template": "minimal",
+    "Executive Format": "ats",
+    "Corporate ATS Layout": "ats",
+    "Tech Developer Format": "modern",
+    "One-Page ATS Template": "ats"
+  };
+
+  function generateTemplateCard(name) {
+    const card = document.createElement('div');
+    card.className = 'template-item';
+    const tag = templateTags[name] || 'all';
+    card.dataset.tag = tag;
+
+    card.innerHTML = `
+      <div class='template-thumb'></div>
+      <strong>${name}</strong>
+      <div class='template-meta'><span class='badge'>${tag.toUpperCase()}</span> <span class='rating'>4.8/5</span></div>
+      <button class='btn btn-primary select-template-btn'>Use this template</button>
+    `;
+
+    card.querySelector('.select-template-btn').addEventListener('click', () => {
+      selectedTemplate = name;
+      document.querySelectorAll('.template-item').forEach(i => i.classList.remove('selected-template'));
+      card.classList.add('selected-template');
+      syncPreview();
+    });
+
+    return card;
+  }
+
+  function loadTemplateList(filter = 'all') {
+    const list = document.getElementById('templateList');
+    list.innerHTML = '';
+    templates.forEach(name => {
+      const card = generateTemplateCard(name);
+      if (filter === 'all' || card.dataset.tag === filter) {
+        list.appendChild(card);
+      }
+    });
+  }
+
+  function syncPreview() {
+    const data = {
+      name: document.getElementById('quick-name').value || 'John Doe',
+      email: document.getElementById('quick-email').value || 'john@example.com',
+      experience: document.getElementById('quick-experience').value || 'Delivered results in delivery pipeline\nLed 3 sprint cycles',
+      skills: document.getElementById('quick-skills').value || 'Python, SQL, Git, Docker',
+      education: document.getElementById('quick-education').value || 'B.Sc. Computer Science',
+      font: document.getElementById('fontStyle').value
+    };
+
+    const themeColor = document.querySelector('.theme-customizer .color-dot.active').dataset.color;
+    const preview = document.getElementById('builderPreview');
+    preview.style.borderColor = themeColor;
+    preview.style.fontFamily = data.font === 'Modern' ? 'Segoe UI, sans-serif' : data.font === 'Compact' ? 'Arial, sans-serif' : 'Georgia, serif';
+    preview.innerHTML = `
+      <h2 style='color:${themeColor};'>${data.name}</h2>
+      <p>${data.email}</p>
+      <h4>Summary</h4><p>High-impact professional with strong results in technical and business teams.</p>
+      <h4>Experience</h4><p>${data.experience.replace(/\n/g, '<br>')}</p>
+      <h4>Skills</h4><p>${data.skills}</p>
+      <h4>Education</h4><p>${data.education}</p>
+    `;
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadTemplateList(btn.dataset.filter);
+    });
+  });
+
+  document.querySelectorAll('.theme-customizer .color-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      document.querySelectorAll('.theme-customizer .color-dot').forEach(d => d.classList.remove('active'));
+      dot.classList.add('active');
+      syncPreview();
+    });
+  });
+
+  function saveDraft() {
+    alert('Draft saved!');
+  }
+
+  loadTemplateList();
+  syncPreview();
+</script>
+{% endblock %}

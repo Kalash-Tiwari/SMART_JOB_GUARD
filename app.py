@@ -224,7 +224,7 @@ def estimate_years_of_experience(text: str):
 
 def extract_education_level(text: str):
     if not text:
-        return ""
+        return 0
     level_map = [
         (r"phd", 5), (r"doctor", 5), (r"master", 4), (r"mba", 4), (r"m\.tech", 4), (r"ms", 4),
         (r"bachelor", 3), (r"b\.tech", 3), (r"ba", 3), (r"bs", 3), (r"degree", 2),
@@ -539,6 +539,22 @@ def resume_builder():
                            demo_data=DEMO_RESUME_DATA)
 
 
+@app.route('/resume_analyzer', methods=['GET'])
+def resume_analyzer():
+    uid = session.get('user_id')
+    if not uid:
+        return redirect(url_for('login'))
+    return render_template('resume_analyzer.html')
+
+
+@app.route('/fake_job_detector', methods=['GET'])
+def fake_job_detector():
+    uid = session.get('user_id')
+    if not uid:
+        return redirect(url_for('login'))
+    return render_template('fake_job_detector.html')
+
+
 @app.route('/resume_builder/edit', methods=['GET', 'POST'])
 def edit_resume():
     uid = session.get('user_id')
@@ -730,6 +746,9 @@ def analyze():
 
     career_readiness = int((resume_strength + job_fit_score + ats_score) / 3)
     recommended_skills = sorted(job_skills.difference(resume_skills))
+
+    session['latest_job_fit'] = f"{job_fit_score}% ({fit_category})"
+    session['latest_resume_strength'] = f"{resume_strength}%"
 
     return render_template(
         "result.html",

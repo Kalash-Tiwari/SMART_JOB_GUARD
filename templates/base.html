@@ -15,9 +15,36 @@
         localStorage.removeItem('darkmode');
       }
     }
+
+    // app theme toggle (global)
+    function applyTheme(theme){
+      document.body.classList.remove('theme-light','theme-dark','theme-red','theme-green','theme-blue','theme-purple','theme-orange','theme-pink');
+      if(theme){
+        document.body.classList.add(theme);
+        localStorage.setItem('resumeTheme',theme);
+      }
+    }
+
     document.addEventListener('DOMContentLoaded',function(){
       if(localStorage.getItem('darkmode')){
         document.body.classList.add('dark');
+      }
+      const savedTheme = localStorage.getItem('resumeTheme');
+      if(savedTheme){
+        document.body.classList.add(savedTheme);
+      }
+
+      const themeDots = document.querySelectorAll('.theme-dot');
+      themeDots.forEach(dot=>{
+        dot.addEventListener('click', ()=>{
+          applyTheme(dot.dataset.theme);
+          themeDots.forEach(d=>d.classList.remove('active'));
+          dot.classList.add('active');
+        });
+      });
+
+      if(savedTheme){
+        document.querySelector(`.theme-dot[data-theme='${savedTheme}']`)?.classList.add('active');
       }
     });
   </script>
@@ -36,6 +63,12 @@
         <a href="/login">Login</a>
         <a href="/register">Register</a>
       {% endif %}
+      <div class="navbar-theme-palette" aria-label="Theme picker">
+        <button class="theme-dot" data-theme="theme-light" title="Light"></button>
+        <button class="theme-dot" data-theme="theme-dark" title="Dark"></button>
+        <button class="theme-dot" data-theme="theme-blue" title="Blue"></button>
+        <button class="theme-dot" data-theme="theme-green" title="Green"></button>
+      </div>
       <button class="dark-toggle" onclick="toggleDark()">🌓</button>
     </div>
   </nav>

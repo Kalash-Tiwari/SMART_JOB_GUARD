@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Fake Job Detector – Smart Job Guard{% endblock %}
+{% block content %}
+<div class="fakejob-shell">
+  <h1>Fake Job Detector</h1>
+  <p>Paste suspicious job posting text below or upload PDF to check for red flags.</p>
+  <div class="fakejob-input">
+    <form action="/analyze" method="post" enctype="multipart/form-data" id="fakeJobForm">
+      <textarea name="job" placeholder="Paste suspicious job description here" rows="10" required></textarea>
+      <input type="file" name="resume_file" accept=".pdf,.doc,.docx,.txt" style="margin-top:8px;">
+      <div class="tips">
+        <small>Check salary, payment method, and contact info.</small><br>
+        <small>Avoid anything asking for money upfront or unrealistic rewards.</small>
+      </div>
+      <button class="btn btn-primary" type="submit">Scan for Fake Job</button>
+    </form>
+  </div>
+  <div class="fakejob-result">
+    <h3>Risk Level: <span class="risk-badge">Pending</span></h3>
+    <div class="risk-bar"><span class="risk-fill low"></span></div>
+    <h4>Red Flags detected: <span id="redFlagCount">0</span></h4>
+    <ul id="redFlagList"><li>No scan yet.</li></ul>
+    <p id="safeAdvice">Safe to apply? Waiting for scan.</p>
+  </div>
+</div>
+<script>
+  document.getElementById('fakeJobForm').addEventListener('submit', function(){
+    document.getElementById('redFlagCount').innerText = 'Scanning...';
+    setTimeout(() => {
+      document.getElementById('redFlagCount').innerText = '0';
+      document.getElementById('redFlagList').innerHTML = '<li>Awaiting analysis results after form submit</li>';
+      document.getElementById('safeAdvice').innerText = 'Proceed only after score is shown.';
+    }, 400);
+  });
+</script>
+{% endblock %}

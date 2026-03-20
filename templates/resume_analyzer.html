@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Resume Analyzer – Smart Job Guard{% endblock %}
+{% block content %}
+<div class="analyzer-shell">
+  <h1>Resume Analyzer</h1>
+  <p>Upload your resume and paste job description to get an instant fit score.</p>
+  <div class="analyzer-panel">
+    <div class="analyzer-input">
+      <h3>Upload Resume</h3>
+      <form action="/analyze" method="post" enctype="multipart/form-data" id="analyzerForm">
+        <div class="upload-dropzone">📂<br>Drag & drop or click to upload</div>
+        <input type="file" name="resume_file" accept=".pdf,.doc,.docx,.txt" required>
+        <h3>Paste job description</h3>
+        <textarea name="job" placeholder="Paste job description here" rows="8" required></textarea>
+        <button class="btn btn-primary" type="submit">Analyze <span id="analyzeSpinner" class="spinner hidden"></span></button>
+      </form>
+    </div>
+    <div class="analyzer-metrics" id="metricsPanel">
+      <div class="metric-card"><strong>Job Fit Score</strong><div class="metric-value">--</div></div>
+      <div class="metric-card"><strong>Skills Matched</strong><div class="metric-value">--</div></div>
+      <div class="metric-card"><strong>Skills Missing</strong><div class="metric-value">--</div></div>
+      <div class="metric-card"><strong>ATS-Friendly</strong><div class="metric-value">--</div></div>
+    </div>
+  </div>
+</div>
+<script>
+  const form = document.getElementById('analyzerForm');
+  const spinner = document.getElementById('analyzeSpinner');
+  form.addEventListener('submit', function(){
+    spinner.classList.remove('hidden');
+    spinner.innerText = '⏳';
+    setTimeout(() => { spinner.innerText = ''; spinner.classList.add('hidden'); }, 2000);
+  });
+</script>
+{% endblock %}

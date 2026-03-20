@@ -1,18 +1,94 @@
 {% extends "base.html" %}
 {% block title %}Home – Smart Job Guard{% endblock %}
 {% block content %}
-  <h1>Smart Job Guard</h1>
-  <p>Paste your resume and a job description to analyze fit and risk.</p>
-  <form action="/analyze" method="post" enctype="multipart/form-data">
-    <div class="form-row">
-      <label>Upload resume file</label>
-      <input type="file" name="resume_file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
+<section class="hero-section">
+  <div class="hero-text">
+    <h1>Build, Analyze & Detect Fake Jobs Smartly</h1>
+    <p>One platform for resume creation, AI matching, and scam protection.</p>
+    <div class="hero-actions">
+      <a href="/resume_builder" class="hero-btn primary">Create Resume</a>
+      <a href="/resume_analyzer" class="hero-btn secondary">Analyze Resume</a>
     </div>
-    <div class="form-row">
-      <label>Job description</label>
-      <textarea name="job" placeholder="Paste job description here" rows="12"></textarea>
+    <div class="hero-button-tags">
+      <div>
+        <strong>Create Resume</strong><br>
+        <small>Pick a template, auto preview, and download PDF.</small>
+      </div>
+      <div>
+        <strong>Analyze Resume</strong><br>
+        <small>Match skills with job description in seconds.</small>
+      </div>
     </div>
-    <button type="submit">Analyze</button>
-  </form>
-  <footer>Simple keyword-based skill matching & rule-based fake job detection.</footer>
+  </div>
+  <div class="hero-visual"></div>
+</section>
+
+<section class="feature-cards-section">
+  <h2>Core Features</h2>
+  <div class="feature-cards">
+    <article class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>Resume Builder</h3>
+      <p>ATS-friendly templates for recruiters and machines.</p>
+      <a class="btn" href="/resume_builder">Try now</a>
+    </article>
+    <article class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Resume Analyzer</h3>
+      <p>Job fit score, matched/missing skills, and improvement tips.</p>
+      <a class="btn" href="/resume_analyzer">Try now</a>
+    </article>
+  </div>
+</section>
+
+<section class="template-gallery-slide">
+  <h2>Resume Template Gallery</h2>
+  <div class="template-scroll-row">
+    <article class="scroll-card">
+      <div class="mock-resume"></div>
+      <div class="card-meta">
+        <h4>Modern</h4>
+        <span class="badge">ATS-Optimized</span>
+      </div>
+      <div class="scroll-actions">
+        <a href="/resume_builder" class="btn">Preview</a>
+        <a href="/resume_builder" class="btn btn-primary">Use</a>
+      </div>
+    </article>
+    <article class="scroll-card">
+      <div class="mock-resume"></div>
+      <div class="card-meta">
+        <h4>Corporate ATS-Friendly</h4>
+        <span class="badge">One-Page</span>
+      </div>
+      <div class="scroll-actions">
+        <a href="/resume_builder" class="btn">Preview</a>
+        <a href="/resume_builder" class="btn btn-primary">Use</a>
+      </div>
+    </article>
+    <article class="scroll-card">
+      <div class="mock-resume"></div>
+      <div class="card-meta">
+        <h4>Creative</h4>
+        <span class="badge">Visual</span>
+      </div>
+      <div class="scroll-actions">
+        <a href="/resume_builder" class="btn">Preview</a>
+        <a href="/resume_builder" class="btn btn-primary">Use</a>
+      </div>
+    </article>
+    <article class="scroll-card">
+      <div class="mock-resume"></div>
+      <div class="card-meta">
+        <h4>Minimal</h4>
+        <span class="badge">Clean</span>
+      </div>
+      <div class="scroll-actions">
+        <a href="/resume_builder" class="btn">Preview</a>
+        <a href="/resume_builder" class="btn btn-primary">Use</a>
+      </div>
+    </article>
+  </div>
+</section>
+
 {% endblock %}

@@ -9,6 +9,21 @@
     <div class="stat-card"><h3>Recent Activity</h3><p>{{ applications|length }} applications</p></div>
   </div>
 
+  <div class="card theme-settings">
+    <h3>Application Theme</h3>
+    <p>Select a color scheme for the full app (saved in browser).</p>
+    <div class="theme-picker">
+      <button class="theme-dot" data-theme="theme-light" title="Light"></button>
+      <button class="theme-dot" data-theme="theme-dark" title="Dark"></button>
+      <button class="theme-dot" data-theme="theme-red" title="Red"></button>
+      <button class="theme-dot" data-theme="theme-green" title="Green"></button>
+      <button class="theme-dot" data-theme="theme-blue" title="Blue"></button>
+      <button class="theme-dot" data-theme="theme-purple" title="Purple"></button>
+      <button class="theme-dot" data-theme="theme-orange" title="Orange"></button>
+      <button class="theme-dot" data-theme="theme-pink" title="Pink"></button>
+    </div>
+  </div>
+
   <!-- tab navigation -->
   <div class="tabs">
     <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">Resume Analyzer</a>

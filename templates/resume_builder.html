@@ -1,191 +1,95 @@
 {% extends "base.html" %}
 {% block title %}Resume Builder – Smart Job Guard{% endblock %}
 {% block content %}
-  <div class="template-gallery-page">
-    <h1>Templates we recommend for you</h1>
-    <p>Select one template and continue to the stepwise resume editor.</p>
-    <div style="display:flex;align-items:center;gap:12px;margin:10px 0;">
-      <span style="font-weight:600;">Step 1:</span> Pick template
-      <span style="font-weight:600;">Step 2:</span> Enter sections (header, experience, skills, education)
-      <span style="font-weight:600;">Step 3:</span> Download PDF
+<div class="resume-builder-shell">
+  <aside class="template-sidebar">
+    <h2>Templates</h2>
+    <div class="template-tabs">
+      <button class="tab-btn active" data-filter="all">All</button>
+      <button class="tab-btn" data-filter="ats">ATS-Friendly</button>
+      <button class="tab-btn" data-filter="modern">Modern</button>
+      <button class="tab-btn" data-filter="minimal">Minimal</button>
     </div>
+    <div id="templateList" class="template-list"></div>
+    <button id="goEdit" class="btn btn-primary" style="width:100%; margin-top:12px;">Continue to builder / edit</button>
 
-    <div class="template-gallery-filter">
-      <div>Filter by:</div>
-      <select id="filterType">
-        <option value="all">All templates</option>
-        <option value="modern">Modern</option>
-        <option value="creative">Creative</option>
-        <option value="classic">Classic</option>
-      </select>
-      <div class="theme-pickers">
-        <span>Preview color:</span>
-        <button class="color-dot color-black active" data-color="black"></button>
-        <button class="color-dot color-navy" data-color="navy"></button>
-        <button class="color-dot color-blue" data-color="blue"></button>
-        <button class="color-dot color-teal" data-color="teal"></button>
-        <button class="color-dot color-green" data-color="green"></button>
-      </div>
+  </aside>
+
+  <main class="template-editor-panel">
+    <div class="builder-info">
+      <h2>Step 1: Select a Resume Template</h2>
+      <p>Choose the template you like. Then click "Continue to builder / edit" to set header and sections on the next page.</p>
+      <p>Templates selected here are preserved and forwarded to edit mode.</p>
     </div>
+  </main>
+</div>
 
-    <div class="theme-panel" style="margin-bottom:16px;">
-      <span>App theme:</span>
-      <button class="theme-btn theme-red">Red</button>
-      <button class="theme-btn theme-orange">Orange</button>
-      <button class="theme-btn theme-pink">Pink</button>
-      <button class="theme-btn theme-blue active">Blue</button>
-      <button class="theme-btn theme-green">Green</button>
-      <button class="theme-btn theme-light">Light</button>
-      <button class="theme-btn theme-dark">Dark</button>
-    </div>
+<script>
+  const templates = {{ templates|tojson|safe }};
+  let selectedTemplate = templates[0];
+  const templateTags = {
+    "Modern Professional Template": "modern",
+    "Clean Minimal Template": "minimal",
+    "Executive Format": "ats",
+    "Corporate ATS Layout": "ats",
+    "Tech Developer Format": "modern",
+    "One-Page ATS Template": "ats"
+  };
 
-    <div class="template-layout">
-      <div class="template-cards" id="templateCards"></div>
-      <div class="selected-preview-panel" id="selectedPreview">
-        <h3>Selected Template Preview</h3>
-        <div id="selectedTemplatePreview" class="template-large-preview">
-          <p class="hint">Choose a template to see a large preview here.</p>
-        </div>
-        <button id="continueEditorBtn" class="btn btn-primary" style="display:none;margin-top:12px;">Continue to Editor</button>
-      </div>
-    </div>
-  </div>
+  function generateTemplateCard(name) {
+    const card = document.createElement('div');
+    card.className = 'template-item';
+    const tag = templateTags[name] || 'all';
+    card.dataset.tag = tag;
 
-  <script>
-    const templates = {{ templates|tojson|safe }};
-    const demoData = {{ demo_data|tojson|safe }};
+    card.innerHTML = `
+      <div class='template-thumb'></div>
+      <strong>${name}</strong>
+      <div class='template-meta'><span class='badge'>${tag.toUpperCase()}</span> <span class='rating'>4.8/5</span></div>
+      <button class='btn btn-primary select-template-btn'>Select</button>
+    `;
 
-    function buildMiniResume(templateName, themeColor) {
-      const resume = document.createElement('div');
-      resume.className = 'resume-card-min';
-      resume.style.setProperty('--resume-color', themeColor || '#0b63d6');
-
-      resume.innerHTML = `
-        <div class="resume-head">
-          <div class="name">${demoData.name}</div>
-          <div class="contact">${demoData.email} • ${demoData.phone}</div>
-        </div>
-        <div class="resume-section"><div class="section-title">Summary</div><div>${demoData.summary}</div></div>
-        <div class="resume-section"><div class="section-title">Skills</div><ul>${demoData.skills.split(',').slice(0,6).map(s => '<li>'+s.trim()+'</li>').join('')}</ul></div>
-        <div class="resume-section"><div class="section-title">Experience</div><ul>${demoData.experience.split('\n').slice(0,2).map(s => '<li>'+s+'</li>').join('')}</ul></div>
-        <div class="resume-section"><div class="section-title">Education</div><div>${demoData.education}</div></div>
-        <div class="resume-section"><div class="section-title">Languages</div><div>${demoData.languages}</div></div>
-      `;
-
-      return resume;
-    }
-
-    function renderTemplateCards() {
-      const container = document.getElementById('templateCards');
-      container.innerHTML = '';
-      const selectedColor = document.querySelector('.color-dot.active').dataset.color;
-      const colorMap = {
-        black: '#2c3e50',
-        navy: '#1d4b8f',
-        blue: '#0b63d6',
-        teal: '#0fb9a5',
-        green: '#0f9b58'
-      };
-      const themeColor = colorMap[selectedColor] || '#0b63d6';
-
-      templates.forEach(name => {
-        const card = document.createElement('div');
-        card.className = 'template-card';
-        card.dataset.template = name;
-        card.innerHTML = `
-          <div class="template-card-header"><strong>${name}</strong></div>
-          <div class="template-card-preview">
-            <div class="template-card-preview-title">Template snapshot</div>
-          <div class="template-card-preview-subtitle">Professional layout with section spacing</div>
-          <div class="template-card-preview-text">
-            <div class="detail-row"><span class="label">Name:</span><span class="value">${demoData.name}</span></div>
-            <div class="detail-row"><span class="label">Experience:</span><span class="value">${demoData.experience.split('\n')[0]}</span></div>
-            <div class="detail-row"><span class="label">Education:</span><span class="value">${demoData.education}</span></div>
-            <div class="detail-row"><span class="label">Skills:</span><span class="value">${demoData.skills.split(',').slice(0,6).join(', ')}</span></div>
-          </div>
-        </div>
-        <div class="template-card-actions">
-          <button class="btn" data-template="${encodeURIComponent(name)}">Choose template</button>
-        </div>
-        `;
-
-        const previewArea = card.querySelector('.template-card-preview');
-        previewArea.appendChild(buildMiniResume(name, themeColor));
-
-        card.querySelector('button').addEventListener('click', () => {
-          selectTemplate(name);
-        });
-
-        container.appendChild(card);
-      });
-    }
-
-    let selectedTemplate = null;
-    const selectedPreviewPanel = document.getElementById('selectedTemplatePreview');
-    const continueEditorBtn = document.getElementById('continueEditorBtn');
-
-    function renderLargePreview(name) {
-      const html = `
-        <div class="preview-header">
-          <h4>${name}</h4>
-          <p style="margin:0;">Live (full-size) resume preview for selected template</p>
-        </div>
-        <div class="preview-content">
-          <div class="resume-head"><strong>${demoData.name}</strong> | ${demoData.email} | ${demoData.phone}</div>
-          <div class="section-title">Summary</div>
-          <div>${demoData.summary}</div>
-          <div class="section-title">Skills</div>
-          <div>${demoData.skills.split(',').slice(0,8).map(s => `<span class=\"skill-pill\">${s.trim()}</span>`).join(' ')}</div>
-          <div class="section-title">Experience</div>
-          <div>${demoData.experience.replace(/\n/g,'<br>')}</div>
-          <div class="section-title">Education</div>
-          <div>${demoData.education}</div>
-        </div>
-      `;
-      selectedPreviewPanel.innerHTML = html;
-    }
-
-    function selectTemplate(name) {
+    card.querySelector('.select-template-btn').addEventListener('click', () => {
       selectedTemplate = name;
-      document.querySelectorAll('.template-card').forEach(card => {
-        card.classList.toggle('selected-template', card.dataset.template === name);
-      });
-      renderLargePreview(name);
-      continueEditorBtn.style.display = 'block';
-      continueEditorBtn.onclick = () => {
-        window.location.href = `{{ url_for('edit_resume') }}?template=${encodeURIComponent(name)}`;
-      };
-    }
-
-    const appThemeButtons = document.querySelectorAll('.theme-btn');
-
-    function applyAppTheme(theme) {
-      document.body.classList.remove('theme-red','theme-orange','theme-pink','theme-blue','theme-green','theme-light','theme-dark','dark');
-      if(theme === 'dark') {
-        document.body.classList.add('dark');
-      } else {
-        document.body.classList.add('theme-' + theme);
-      }
-      appThemeButtons.forEach(btn => btn.classList.toggle('active', btn.classList.contains('theme-' + theme)));
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      renderTemplateCards();
-      document.querySelectorAll('.color-dot').forEach(dot => {
-        dot.addEventListener('click', function() {
-          document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-          this.classList.add('active');
-          renderTemplateCards();
-        });
-      });
-      appThemeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          appThemeButtons.forEach(t => t.classList.remove('active'));
-          btn.classList.add('active');
-          const themeName = btn.classList.value.split(' ').filter(c => c.startsWith('theme-'))[0]?.replace('theme-', '') || 'blue';
-          applyAppTheme(themeName);
-        });
-      });
+      document.querySelectorAll('.template-item').forEach(i => i.classList.remove('selected-template'));
+      card.classList.add('selected-template');
+      document.getElementById('goEdit').disabled = false;
     });
-  </script>
+
+    return card;
+  }
+
+  function loadTemplateList(filter = 'all') {
+    const list = document.getElementById('templateList');
+    list.innerHTML = '';
+    templates.forEach(name => {
+      const card = generateTemplateCard(name);
+      if (filter === 'all' || card.dataset.tag === filter) {
+        list.appendChild(card);
+      }
+    });
+  }
+
+
+  document.getElementById('goEdit').addEventListener('click', () => {
+    let query = '/resume_builder/edit?template=' + encodeURIComponent(selectedTemplate || templates[0]);
+    window.location.href = query;
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadTemplateList(btn.dataset.filter);
+    });
+  });
+
+  loadTemplateList();
+
+  const saved = localStorage.getItem('resumeTheme');
+  if (saved) {
+    document.body.classList.add(saved);
+    document.querySelector(`.color-dot[data-theme='${saved}']`)?.classList.add('active');
+  }
+</script>
 {% endblock %}
