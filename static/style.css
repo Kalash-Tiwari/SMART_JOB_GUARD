@@ -38,10 +38,10 @@ body.theme-purple { --text-color: #2d1f4d; background: #f5f1ff; --primary-border
 body.theme-orange {  --text-color: #4a2a00; background: #fff7ec; --primary-border: #f3ba71; --accent: #d36f24; }
 body.theme-light { --text-color: #1f2a44; background: #ffffff; --primary-border: #d9dfea; --accent: #2c3e50; }
 body.theme-dark {--text-color: #e6eef8;  background: #111827; --primary-border: #2f3f5d; --accent: #4d9cff; }
-.container{
-  max-width:960px;
-  margin:0 auto;
-  padding:24px 16px;
+.resume-builder-shell {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
 }
 h1,h2,h3{margin:0 0 12px;}
 .navbar{
@@ -489,8 +489,9 @@ body.dark .resume-preview{background:#0b1220;border-color:#122237;}
 
 .template-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  width: 100%;
 }
 
 .template-item {
@@ -974,7 +975,6 @@ body.theme-dark {
 
 .template-full {
   width: 100%;
-  padding: 20px;
 }
 
   .builder-grid {

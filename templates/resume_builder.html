@@ -11,7 +11,7 @@
       <button class="tab-btn" data-filter="minimal">Minimal</button>
     </div>
     <div id="templateList" class="template-list"></div>
-    <button id="goEdit" class="btn btn-primary" style="width:100%; margin-top:12px;">Continue to builder / edit</button>
+    <button id="goEdit" class="btn btn-primary" disabled>
 
   </aside>
 
@@ -80,10 +80,20 @@
 
   loadTemplateList();
 
-  const saved = localStorage.getItem('resumeTheme');
+  const saved = localStorage.getItem('theme');  // ✅ same key use karo
   if (saved) {
-    document.body.classList.add(saved);
-    document.querySelector(`.color-dot[data-theme='${saved}']`)?.classList.add('active');
-  }
+  document.body.classList.remove(
+    "theme-red",
+    "theme-green",
+    "theme-blue",
+    "theme-pink",
+    "theme-purple",
+    "theme-orange",
+    "theme-light",
+    "theme-dark"
+  );
+
+  document.body.classList.add(saved);
+}
 </script>
 {% endblock %}
