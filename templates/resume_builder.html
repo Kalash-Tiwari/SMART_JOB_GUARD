@@ -1,177 +1,191 @@
 {% extends "base.html" %}
 {% block title %}Resume Builder – Smart Job Guard{% endblock %}
 {% block content %}
-  <h1>Resume Builder</h1>
+  <div class="template-gallery-page">
+    <h1>Templates we recommend for you</h1>
+    <p>Select one template and continue to the stepwise resume editor.</p>
+    <div style="display:flex;align-items:center;gap:12px;margin:10px 0;">
+      <span style="font-weight:600;">Step 1:</span> Pick template
+      <span style="font-weight:600;">Step 2:</span> Enter sections (header, experience, skills, education)
+      <span style="font-weight:600;">Step 3:</span> Download PDF
+    </div>
 
-  <!-- tabs (same as dashboard) -->
-  <div class="tabs">
-    <a href="/dashboard" class="{% if request.path == '/dashboard' %}active{% endif %}">Resume Analyzer</a>
-    <a href="/resume_builder" class="{% if request.path == '/resume_builder' %}active{% endif %}">Resume Builder</a>
-  </div>
+    <div class="template-gallery-filter">
+      <div>Filter by:</div>
+      <select id="filterType">
+        <option value="all">All templates</option>
+        <option value="modern">Modern</option>
+        <option value="creative">Creative</option>
+        <option value="classic">Classic</option>
+      </select>
+      <div class="theme-pickers">
+        <span>Preview color:</span>
+        <button class="color-dot color-black active" data-color="black"></button>
+        <button class="color-dot color-navy" data-color="navy"></button>
+        <button class="color-dot color-blue" data-color="blue"></button>
+        <button class="color-dot color-teal" data-color="teal"></button>
+        <button class="color-dot color-green" data-color="green"></button>
+      </div>
+    </div>
 
-  <div class="row">
-    <div class="main">
-      <div class="card">
-        <form action="/resume_builder" method="post">
-          <div class="form-row">
-            <label>Name</label>
-            <input type="text" name="name" value="{{ data.name if data.name }}">
-          </div>
-          <div class="form-row">
-            <label>Education</label>
-            <select name="education" id="educationSelect" onchange="updateEducationDisplay()">
-              <option value="">-- Select a course --</option>
-              <option value="B.Tech (Computer Science)" {% if data.education=='B.Tech (Computer Science)' %}selected{% endif %}>B.Tech (Computer Science)</option>
-              <option value="B.Tech (Information Technology)" {% if data.education=='B.Tech (Information Technology)' %}selected{% endif %}>B.Tech (Information Technology)</option>
-              <option value="B.Sc (Computer Science)" {% if data.education=='B.Sc (Computer Science)' %}selected{% endif %}>B.Sc (Computer Science)</option>
-              <option value="MBA (IT Management)" {% if data.education=='MBA (IT Management)' %}selected{% endif %}>MBA (IT Management)</option>
-              <option value="Master's (Computer Science)" {% if data.education=="Master's (Computer Science)" %}selected{% endif %}>Master's (Computer Science)</option>
-              <option value="Diploma (Computer Science)" {% if data.education=='Diploma (Computer Science)' %}selected{% endif %}>Diploma (Computer Science)</option>
-              <option value="B.Com (Finance)" {% if data.education=='B.Com (Finance)' %}selected{% endif %}>B.Com (Finance)</option>
-              <option value="B.Tech (Mechanical)" {% if data.education=='B.Tech (Mechanical)' %}selected{% endif %}>B.Tech (Mechanical)</option>
-              <option value="B.Tech (Civil)" {% if data.education=='B.Tech (Civil)' %}selected{% endif %}>B.Tech (Civil)</option>
-              <option value="Other" {% if data.education=='Other' %}selected{% endif %}>Other</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <label>Selected Education</label>
-            <input type="text" id="educationDisplay" readonly value="{{ data.education or '' }}">
-          </div>
-          <div class="form-row">
-            <label>Skills (choose one or more)</label>
-            <div id="skillsCheckboxes" style="max-height:200px; overflow:auto; border:1px solid #ccc; padding:5px;">
-              {% set available_skills = [
-                'Angular','AWS','Azure','Bootstrap','C++','C#','CSS','Docker','Django',
-                'Express.js','Flask','Git','Go','GraphQL','HTML','Java','JavaScript',
-                'Jenkins','JSON','Kubernetes','Linux','MongoDB','MySQL','Node.js',
-                'Numpy','Oracle','PHP','Python','React','REST API','Ruby','Rust',
-                'Scikit-learn','SQL','Selenium','Spring Boot','TensorFlow','TypeScript',
-                'Vue.js','XML'
-              ] %}
-              {% set chosen = data.skills_list if data.skills_list is defined else [] %}
-              {% for skill in available_skills %}
-                <label style="display:block;">
-                  <input type="checkbox" name="skills" value="{{ skill }}" {% if skill in chosen %}checked{% endif %} onchange="updateSkillsDisplay()">
-                  {{ skill }}
-                </label>
-              {% endfor %}
-            </div>
-          </div>
-          <div class="form-row">
-            <label>Selected Skills</label>
-            <textarea id="skillsDisplay" readonly style="min-height: 100px;">{{ data.skills or '' }}</textarea>
-          </div>
-          <!-- template selection and editable content -->
-          <div class="form-row">
-            <label>Template</label>
-            <select name="template_name" id="templateName" onchange="loadTemplate()">
-              {% for t in templates %}
-                <option value="{{ t }}" {% if selected_template==t %}selected{% endif %}>{{ t }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="form-row">
-            <label>Template Content (you can edit)</label>
-            <textarea name="template_content" id="templateContent" style="min-height: 150px;">{{ template_content or '' }}</textarea>
-          </div>
-          <div class="form-row">
-            <label>Preview of Completed Resume</label>
-            <textarea id="previewDisplay" readonly style="min-height: 200px; width:100%;">{{ rendered_template }}</textarea>
-          </div>
-          <div class="form-row">
-            <label>Experience</label>
-            <textarea name="experience">{{ data.experience if data.experience }}</textarea>
-          </div>
-          <div class="form-row">
-            <label>Projects</label>
-            <textarea name="projects">{{ data.projects if data.projects }}</textarea>
-          </div>
-          <div class="form-row">
-            <label>Certifications</label>
-            <textarea name="certifications">{{ data.certifications if data.certifications }}</textarea>
-          </div>
-          <div class="form-row">
-            <label>Template selection & preview are above</label>
-          </div>
-          <button type="submit" name="action" value="preview">Preview</button>
-          <button type="submit" name="action" value="download">Download PDF</button>
-        </form>
-      </div>    </div>
+    <div class="theme-panel" style="margin-bottom:16px;">
+      <span>App theme:</span>
+      <button class="theme-btn theme-red">Red</button>
+      <button class="theme-btn theme-orange">Orange</button>
+      <button class="theme-btn theme-pink">Pink</button>
+      <button class="theme-btn theme-blue active">Blue</button>
+      <button class="theme-btn theme-green">Green</button>
+      <button class="theme-btn theme-light">Light</button>
+      <button class="theme-btn theme-dark">Dark</button>
+    </div>
 
-    <div class="sidebar">
-      <div class="card">
-        <h3>Live Job Openings</h3>
-        <div class="job-card"><strong>Software Developer</strong> – Mumbai</div>
-        <div class="job-card"><strong>Data Analyst</strong> – Bangalore</div>
-        <div class="job-card"><strong>Web Designer</strong> – Pune</div>
-        <div class="job-card marquee"><span>Hiring now! Check back frequently for new openings.</span></div>
+    <div class="template-layout">
+      <div class="template-cards" id="templateCards"></div>
+      <div class="selected-preview-panel" id="selectedPreview">
+        <h3>Selected Template Preview</h3>
+        <div id="selectedTemplatePreview" class="template-large-preview">
+          <p class="hint">Choose a template to see a large preview here.</p>
+        </div>
+        <button id="continueEditorBtn" class="btn btn-primary" style="display:none;margin-top:12px;">Continue to Editor</button>
       </div>
     </div>
   </div>
 
   <script>
-    // education dropdown -> display
-    function updateEducationDisplay() {
-      const select = document.getElementById('educationSelect');
-      const display = document.getElementById('educationDisplay');
-      display.value = select.value;
+    const templates = {{ templates|tojson|safe }};
+    const demoData = {{ demo_data|tojson|safe }};
+
+    function buildMiniResume(templateName, themeColor) {
+      const resume = document.createElement('div');
+      resume.className = 'resume-card-min';
+      resume.style.setProperty('--resume-color', themeColor || '#0b63d6');
+
+      resume.innerHTML = `
+        <div class="resume-head">
+          <div class="name">${demoData.name}</div>
+          <div class="contact">${demoData.email} • ${demoData.phone}</div>
+        </div>
+        <div class="resume-section"><div class="section-title">Summary</div><div>${demoData.summary}</div></div>
+        <div class="resume-section"><div class="section-title">Skills</div><ul>${demoData.skills.split(',').slice(0,6).map(s => '<li>'+s.trim()+'</li>').join('')}</ul></div>
+        <div class="resume-section"><div class="section-title">Experience</div><ul>${demoData.experience.split('\n').slice(0,2).map(s => '<li>'+s+'</li>').join('')}</ul></div>
+        <div class="resume-section"><div class="section-title">Education</div><div>${demoData.education}</div></div>
+        <div class="resume-section"><div class="section-title">Languages</div><div>${demoData.languages}</div></div>
+      `;
+
+      return resume;
     }
 
-    // skills checkbox group -> display comma separated
-    function updateSkillsDisplay() {
-      const checkboxes = document.querySelectorAll('input[name="skills"]:checked');
-      const display = document.getElementById('skillsDisplay');
-      const values = Array.from(checkboxes).map(cb => cb.value);
-      display.value = values.join(', ');
+    function renderTemplateCards() {
+      const container = document.getElementById('templateCards');
+      container.innerHTML = '';
+      const selectedColor = document.querySelector('.color-dot.active').dataset.color;
+      const colorMap = {
+        black: '#2c3e50',
+        navy: '#1d4b8f',
+        blue: '#0b63d6',
+        teal: '#0fb9a5',
+        green: '#0f9b58'
+      };
+      const themeColor = colorMap[selectedColor] || '#0b63d6';
+
+      templates.forEach(name => {
+        const card = document.createElement('div');
+        card.className = 'template-card';
+        card.dataset.template = name;
+        card.innerHTML = `
+          <div class="template-card-header"><strong>${name}</strong></div>
+          <div class="template-card-preview">
+            <div class="template-card-preview-title">Template snapshot</div>
+          <div class="template-card-preview-subtitle">Professional layout with section spacing</div>
+          <div class="template-card-preview-text">
+            <div class="detail-row"><span class="label">Name:</span><span class="value">${demoData.name}</span></div>
+            <div class="detail-row"><span class="label">Experience:</span><span class="value">${demoData.experience.split('\n')[0]}</span></div>
+            <div class="detail-row"><span class="label">Education:</span><span class="value">${demoData.education}</span></div>
+            <div class="detail-row"><span class="label">Skills:</span><span class="value">${demoData.skills.split(',').slice(0,6).join(', ')}</span></div>
+          </div>
+        </div>
+        <div class="template-card-actions">
+          <button class="btn" data-template="${encodeURIComponent(name)}">Choose template</button>
+        </div>
+        `;
+
+        const previewArea = card.querySelector('.template-card-preview');
+        previewArea.appendChild(buildMiniResume(name, themeColor));
+
+        card.querySelector('button').addEventListener('click', () => {
+          selectTemplate(name);
+        });
+
+        container.appendChild(card);
+      });
     }
 
-    // template handling
-    const templateTexts = {{ template_texts|tojson|safe }};
-    function loadTemplate() {
-      const sel = document.getElementById('templateName');
-      const textarea = document.getElementById('templateContent');
-      if (sel && textarea) {
-        textarea.value = templateTexts[sel.value] || '';
-        updateRenderedPreview();
+    let selectedTemplate = null;
+    const selectedPreviewPanel = document.getElementById('selectedTemplatePreview');
+    const continueEditorBtn = document.getElementById('continueEditorBtn');
+
+    function renderLargePreview(name) {
+      const html = `
+        <div class="preview-header">
+          <h4>${name}</h4>
+          <p style="margin:0;">Live (full-size) resume preview for selected template</p>
+        </div>
+        <div class="preview-content">
+          <div class="resume-head"><strong>${demoData.name}</strong> | ${demoData.email} | ${demoData.phone}</div>
+          <div class="section-title">Summary</div>
+          <div>${demoData.summary}</div>
+          <div class="section-title">Skills</div>
+          <div>${demoData.skills.split(',').slice(0,8).map(s => `<span class=\"skill-pill\">${s.trim()}</span>`).join(' ')}</div>
+          <div class="section-title">Experience</div>
+          <div>${demoData.experience.replace(/\n/g,'<br>')}</div>
+          <div class="section-title">Education</div>
+          <div>${demoData.education}</div>
+        </div>
+      `;
+      selectedPreviewPanel.innerHTML = html;
+    }
+
+    function selectTemplate(name) {
+      selectedTemplate = name;
+      document.querySelectorAll('.template-card').forEach(card => {
+        card.classList.toggle('selected-template', card.dataset.template === name);
+      });
+      renderLargePreview(name);
+      continueEditorBtn.style.display = 'block';
+      continueEditorBtn.onclick = () => {
+        window.location.href = `{{ url_for('edit_resume') }}?template=${encodeURIComponent(name)}`;
+      };
+    }
+
+    const appThemeButtons = document.querySelectorAll('.theme-btn');
+
+    function applyAppTheme(theme) {
+      document.body.classList.remove('theme-red','theme-orange','theme-pink','theme-blue','theme-green','theme-light','theme-dark','dark');
+      if(theme === 'dark') {
+        document.body.classList.add('dark');
+      } else {
+        document.body.classList.add('theme-' + theme);
       }
+      appThemeButtons.forEach(btn => btn.classList.toggle('active', btn.classList.contains('theme-' + theme)));
     }
 
-    function updateRenderedPreview() {
-      const tmpl = document.getElementById('templateContent').value;
-      const name = document.querySelector('input[name="name"]').value || '';
-      const education = document.getElementById('educationSelect').value || '';
-      const skills = document.getElementById('skillsDisplay').value || '';
-      const experience = document.querySelector('textarea[name="experience"]').value || '';
-      const projects = document.querySelector('textarea[name="projects"]').value || '';
-      const certifications = document.querySelector('textarea[name="certifications"]').value || '';
-      // simple replacement of placeholders
-      let rendered = tmpl.replace(/{name}/g, name)
-                        .replace(/{education}/g, education)
-                        .replace(/{skills}/g, skills)
-                        .replace(/{experience}/g, experience)
-                        .replace(/{projects}/g, projects)
-                        .replace(/{certifications}/g, certifications);
-      const previewArea = document.getElementById('previewDisplay');
-      if (previewArea) previewArea.value = rendered;
-    }
-
-    // wire events
-    window.addEventListener('DOMContentLoaded', function() {
-      updateEducationDisplay();
-      updateSkillsDisplay();
-      loadTemplate();
-      // attach change listeners for dynamic preview
-      document.getElementById('educationSelect').addEventListener('change', updateRenderedPreview);
-      document.getElementById('templateContent').addEventListener('input', updateRenderedPreview);
-      document.getElementById('templateName').addEventListener('change', loadTemplate);
-      const skillCbs = document.querySelectorAll('input[name="skills"]');
-      skillCbs.forEach(cb => cb.addEventListener('change', function(){ updateSkillsDisplay(); updateRenderedPreview(); }));
-      const otherFields = ['name','experience','projects','certifications'];
-      otherFields.forEach(name => {
-        const el = document.querySelector('[name="'+name+'"]');
-        if(el) el.addEventListener('input', updateRenderedPreview);
+    document.addEventListener('DOMContentLoaded', function() {
+      renderTemplateCards();
+      document.querySelectorAll('.color-dot').forEach(dot => {
+        dot.addEventListener('click', function() {
+          document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+          this.classList.add('active');
+          renderTemplateCards();
+        });
+      });
+      appThemeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          appThemeButtons.forEach(t => t.classList.remove('active'));
+          btn.classList.add('active');
+          const themeName = btn.classList.value.split(' ').filter(c => c.startsWith('theme-'))[0]?.replace('theme-', '') || 'blue';
+          applyAppTheme(themeName);
+        });
       });
     });
   </script>
-
 {% endblock %}

@@ -39,14 +39,74 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# Predefined skill keywords (can be extended)
+# Predefined skill keywords (core database for analyzer)
 SKILLS = [
-    "python", "java", "c++", "c#", "javascript", "typescript", "sql", "nosql",
-    "django", "flask", "react", "angular", "vue", "html", "css",
-    "aws", "azure", "gcp", "docker", "kubernetes", "git", "linux",
-    "pandas", "numpy", "scikit-learn", "tensorflow", "keras", "machine learning",
-    "data analysis", "data visualization", "rest api", "api", "node.js", "express",
-    "communication", "leadership", "project management", "testing", "unit testing",
+    # Programming Languages
+    "python","java","c","c++","c#","javascript","typescript","go","rust","ruby","php","kotlin","swift","scala","r","matlab","dart","objective-c",
+    # Web Development
+    "html","css","sass","less","bootstrap","tailwind css","react","reactjs","angular","vue","nodejs","express","nextjs","nuxtjs","jquery","web development","frontend development","backend development","full stack development",
+    # Mobile Development
+    "android development","ios development","flutter","react native","xamarin","ionic","mobile app development","kotlin android","swift ios",
+    # Frameworks
+    "django","flask","spring","spring boot","laravel","symfony","rails","asp.net","fastapi","nestjs","svelte","ember",
+    # Databases
+    "sql","mysql","postgresql","mongodb","sqlite","oracle","redis","cassandra","firebase","dynamodb","mariadb","neo4j",
+    # Data Science & AI
+    "data science","data analysis","data analytics","machine learning","deep learning","artificial intelligence","nlp","natural language processing","computer vision","reinforcement learning","predictive modeling",
+    # Data Tools
+    "pandas","numpy","scikit-learn","tensorflow","pytorch","keras","matplotlib","seaborn","plotly","statsmodels",
+    # Big Data
+    "hadoop","spark","pyspark","hive","pig","kafka","flink","big data analytics","data warehousing","etl","data pipelines",
+    # BI & Visualization
+    "excel","advanced excel","power bi","tableau","looker","qlikview","data visualization","dashboard development",
+    # Cloud Computing
+    "aws","amazon web services","azure","google cloud","gcp","cloud computing","serverless","cloud architecture",
+    # DevOps
+    "docker","kubernetes","terraform","ansible","jenkins","ci/cd","github actions","gitlab ci","devops","infrastructure as code",
+    # Version Control
+    "git","github","gitlab","bitbucket","version control",
+    # Operating Systems
+    "linux","unix","windows server","bash","shell scripting","command line",
+    # APIs
+    "rest api","graphql","soap","api development","api integration","microservices","web services",
+    # Testing
+    "unit testing","integration testing","automation testing","selenium","cypress","jest","pytest","software testing","qa testing","manual testing",
+    # Security
+    "cybersecurity","ethical hacking","penetration testing","network security","application security","cryptography","vulnerability assessment","security auditing",
+    # Networking
+    "networking","tcp/ip","dns","http","https","vpn","firewalls","network troubleshooting",
+    # UI/UX
+    "ui design","ux design","figma","adobe xd","wireframing","prototyping","user research","interaction design",
+    # Design Tools
+    "photoshop","illustrator","canva","indesign","graphic design","visual design",
+    # Project Management
+    "project management","agile","scrum","kanban","jira","confluence","waterfall methodology","risk management","stakeholder management",
+    # Product & Business
+    "product management","business analysis","requirements gathering","market research","product strategy","roadmap planning",
+    # Finance & Accounting
+    "financial analysis","budgeting","forecasting","accounting","taxation","auditing","cost management",
+    # Marketing
+    "digital marketing","seo","search engine optimization","sem","google analytics","social media marketing","content marketing","email marketing","affiliate marketing","ppc advertising",
+    # Sales
+    "sales strategy","lead generation","crm","customer acquisition","negotiation","business development","sales forecasting",
+    # Customer Support
+    "customer service","technical support","help desk","client relations","customer success",
+    # HR Skills
+    "recruitment","talent acquisition","employee relations","payroll management","performance management","hr analytics",
+    # Education & Training
+    "teaching","training","curriculum development","instructional design","e-learning","mentoring",
+    # Research
+    "research methods","data interpretation","statistical analysis","academic research",
+    # Soft Skills
+    "communication","verbal communication","written communication","teamwork","collaboration","leadership","problem solving","critical thinking","analytical thinking","decision making","adaptability","creativity","innovation","time management","organization","attention to detail","presentation skills","public speaking","negotiation","conflict resolution","emotional intelligence","interpersonal skills","active listening","multitasking","strategic thinking","planning","self motivation","work ethic","stress management",
+    # Management Skills
+    "people management","team leadership","performance coaching","delegation","resource management","change management",
+    # Office Tools
+    "microsoft office","word","excel","powerpoint","outlook","google workspace","google sheets","google docs","slack","trello","notion",
+    # Emerging Technologies
+    "blockchain","cryptocurrency","web3","iot","internet of things","robotics","augmented reality","virtual reality","edge computing","quantum computing",
+    # Miscellaneous Technical
+    "debugging","troubleshooting","system design","software architecture","design patterns","object oriented programming","data structures","algorithms","optimization","code review","technical documentation"
 ]
 
 # resume builder templates (display names)
@@ -95,6 +155,20 @@ for name in TEMPLATES:
         f"{name}\nName: {{name}}\nEducation: {{education}}\nSkills: {{skills}}\nExperience: {{experience}}\nProjects: {{projects}}\nCertifications: {{certifications}}\n"
     )
 
+# demo resume data for template previews and the editor prefill
+DEMO_RESUME_DATA = {
+    'name': 'Diya Agarwal',
+    'email': 'd.agarwal@example.in',
+    'phone': '+91 11 5555 3345',
+    'summary': 'Customer-focused Retail Sales professional with solid understanding of retail dynamics, 5 years of experience delivering strong customer satisfaction and revenue growth.',
+    'education': 'Diploma in Financial Accounting | Oxford Software Institute',
+    'skills': 'Cash register operation, Sales expertise, Inventory management, Documentation, Teamwork',
+    'experience': 'Retail Sales Associate - ZARA | New Delhi (2017 - Present)\nBarista - Dunkin\' Donuts | New Delhi (2015 - 2017)',
+    'projects': 'Improved point-of-sale speed by 18%, created customer engagement plan, optimized inventory data.',
+    'certifications': 'Diploma in Financial Accounting',
+    'languages': 'Hindi (Native), English (Fluent), Bengali (Intermediate)'
+}
+
 
 SUSPICIOUS_PHRASES = [
     "registration fee", "registration fees", "guaranteed job", "earn money fast",
@@ -136,6 +210,96 @@ def detect_fake_phrases(text: str):
         if phrase in t:
             flags.append(phrase)
     return flags
+
+
+def estimate_years_of_experience(text: str):
+    if not text:
+        return 0
+    matches = re.findall(r"(\d+)\s*\+?\s*years?", text.lower())
+    values = [int(v) for v in matches if v.isdigit()]
+    if values:
+        return max(values)
+    return 0
+
+
+def extract_education_level(text: str):
+    if not text:
+        return ""
+    level_map = [
+        (r"phd", 5), (r"doctor", 5), (r"master", 4), (r"mba", 4), (r"m\.tech", 4), (r"ms", 4),
+        (r"bachelor", 3), (r"b\.tech", 3), (r"ba", 3), (r"bs", 3), (r"degree", 2),
+        (r"diploma", 2), (r"high school", 1)
+    ]
+    text_lower = text.lower()
+    for keyword, level in level_map:
+        if re.search(r"\b" + keyword + r"\b", text_lower):
+            return level
+    return 0
+
+
+def compute_resume_strength(resume_text: str, resume_skills: set):
+    if not resume_text:
+        return 0
+    points = 0
+    total = 5
+    # presence heuristics
+    if resume_skills:
+        points += 1
+    if re.search(r"\bexperience\b|\d+\s+years?", resume_text, re.I):
+        points += 1
+    if re.search(r"\b(bachelor|master|mba|phd|diploma|college|university)\b", resume_text, re.I):
+        points += 1
+    if re.search(r"\b(project|initiative|deliverable)\b", resume_text, re.I):
+        points += 1
+    if re.search(r"\b(certification|certified|training)\b", resume_text, re.I):
+        points += 1
+    return int((points / total) * 100)
+
+
+def extract_keywords(text: str):
+    if not text:
+        return set()
+    words = re.findall(r"[a-zA-Z0-9]+", text.lower())
+    stopwords = set(["and","or","the","is","a","an","to","in","on","for","with","of","by","at","from","as","that","this","it","be","are","was","were"])
+    return set(w for w in words if w not in stopwords and len(w) > 2)
+
+
+def extract_project_relevance(text: str):
+    if not text:
+        return 0
+    project_terms = re.findall(r"\b(project|projects|project-based|project experience|developed)\b", text.lower())
+    return min(5, len(project_terms))
+
+
+def compute_project_score(resume_count: int, job_count: int):
+    if job_count > 0:
+        return int(min(100, (resume_count / job_count) * 100))
+    return 50 if resume_count > 0 else 0
+
+
+def compute_ats_compatibility(resume_text: str):
+    if not resume_text:
+        return 0
+    score = 0
+    if re.search(r"\b(contact|email|phone|address|linkedin)\b", resume_text, re.I):
+        score += 20
+    if re.search(r"\b(skills|technical skills|skills:)\b", resume_text, re.I):
+        score += 20
+    if re.search(r"\b(experience|work history|professional experience)\b", resume_text, re.I):
+        score += 20
+    if re.search(r"\b(education|degree|bachelor|master|diploma|phd)\b", resume_text, re.I):
+        score += 20
+    if re.search(r"\b(project|achievement|certification|training)\b", resume_text, re.I):
+        score += 20
+    return min(100, score)
+
+
+def resume_match_level(score: int):
+    if score >= 80:
+        return "Strong Match"
+    if score >= 55:
+        return "Moderate Match"
+    return "Low Match"
 
 
 def extract_text_from_file(path):
@@ -363,70 +527,99 @@ def upload_resume():
 
 # --- Resume builder ---
 
-@app.route('/resume_builder', methods=['GET', 'POST'])
+@app.route('/resume_builder', methods=['GET'])
 def resume_builder():
     uid = session.get('user_id')
     if not uid:
         return redirect(url_for('login'))
-    preview = False
+
+    return render_template('resume_builder.html',
+                           templates=TEMPLATES,
+                           template_texts=TEMPLATE_TEXTS,
+                           demo_data=DEMO_RESUME_DATA)
+
+
+@app.route('/resume_builder/edit', methods=['GET', 'POST'])
+def edit_resume():
+    uid = session.get('user_id')
+    if not uid:
+        return redirect(url_for('login'))
+
+    promo_template = request.args.get('template') or request.args.get('template_name') or (TEMPLATES[0] if TEMPLATES else '')
+    selected_template = promo_template
+    template_content = TEMPLATE_TEXTS.get(selected_template, '')
     data = {}
-    selected_template = None
-    template_content = ''
     rendered_template = ''
+    preview = False
 
     if request.method == 'POST':
-        # Collect skills from checkbox group
         skills_list = request.form.getlist('skills')
         data = {
             'name': request.form.get('name',''),
+            'email': request.form.get('email',''),
+            'phone': request.form.get('phone',''),
+            'summary': request.form.get('summary',''),
             'education': request.form.get('education',''),
-            # keep comma string for display, but also send list
             'skills': ', '.join(skills_list) if skills_list else '',
             'skills_list': skills_list,
             'experience': request.form.get('experience',''),
             'projects': request.form.get('projects',''),
             'certifications': request.form.get('certifications',''),
+            'languages': request.form.get('languages',''),
+            'resume_theme': request.form.get('resume_theme','blue')
         }
-        selected_template = request.form.get('template_name')
-        template_content = request.form.get('template_content','')
+        selected_template = request.form.get('template_name', selected_template)
+        template_content = request.form.get('template_content', template_content)
 
-        # format the template content with the data for preview/download
         try:
             rendered_template = template_content.format(
                 name=data.get('name',''),
+                email=data.get('email',''),
+                phone=data.get('phone',''),
+                summary=data.get('summary',''),
                 education=data.get('education',''),
                 skills=data.get('skills',''),
                 experience=data.get('experience',''),
                 projects=data.get('projects',''),
                 certifications=data.get('certifications',''),
+                languages=data.get('languages','')
             )
         except Exception:
-            rendered_template = template_content  # fallback if formatting fails
+            rendered_template = template_content
 
         action = request.form.get('action')
         if action == 'download':
             pdf_bytes = generate_pdf(data, template_text=rendered_template)
-            return send_file(BytesIO(pdf_bytes), as_attachment=True, download_name="resume.pdf", mimetype="application/pdf")
-        else:
-            preview = True
-    else:
-        # GET request: choose default template
-        selected_template = request.args.get('template_name') or (TEMPLATES[0] if TEMPLATES else '')
-        template_content = TEMPLATE_TEXTS.get(selected_template, '')
-        rendered_template = template_content.format(
-            name='', education='', skills='', experience='', projects='', certifications=''
-        )
-        # no skills selected yet
-        data['skills_list'] = []
+            return send_file(BytesIO(pdf_bytes), as_attachment=True, download_name='resume.pdf', mimetype='application/pdf')
 
-    return render_template('resume_builder.html',
+        preview = True
+    else:
+        # prefill with demo data for first load
+        data = DEMO_RESUME_DATA.copy()
+        rendered_template = template_content.format(
+            name=data.get('name',''),
+            email=data.get('email',''),
+            phone=data.get('phone',''),
+            summary=data.get('summary',''),
+            education=data.get('education',''),
+            skills=data.get('skills',''),
+            experience=data.get('experience',''),
+            projects=data.get('projects',''),
+            certifications=data.get('certifications',''),
+            languages=data.get('languages','')
+        )
+        data['skills_list'] = [s.strip() for s in data.get('skills','').split(',') if s.strip()]
+        data['resume_theme'] = 'blue'
+
+    return render_template('resume_builder_edit.html',
                            templates=TEMPLATES,
                            template_texts=TEMPLATE_TEXTS,
-                           preview=preview,
-                           data=data,
+                           demo_data=DEMO_RESUME_DATA,
                            selected_template=selected_template,
                            template_content=template_content,
-                           rendered_template=rendered_template)
+                           data=data,
+                           rendered_template=rendered_template,
+                           preview=preview)
 
 
 @app.route("/uploads/<path:filename>")
@@ -479,10 +672,45 @@ def analyze():
     matched = resume_skills.intersection(job_skills)
     missing = job_skills.difference(resume_skills)
 
-    if len(job_skills) > 0:
-        score = int(len(matched) / len(job_skills) * 100)
+    skill_match_pct = int(len(matched) / len(job_skills) * 100) if len(job_skills) > 0 else 0
+
+    resume_experience_years = estimate_years_of_experience(resume_text)
+    job_experience_years = estimate_years_of_experience(job_text)
+    if job_experience_years > 0:
+        experience_match_pct = min(100, int((resume_experience_years / job_experience_years) * 100))
     else:
-        score = 0
+        experience_match_pct = 100 if resume_experience_years > 0 else 50
+
+    resume_edu_level = extract_education_level(resume_text)
+    job_edu_level = extract_education_level(job_text)
+    if job_edu_level > 0:
+        education_match_pct = int(min(100, (resume_edu_level / job_edu_level) * 100))
+    else:
+        education_match_pct = 100 if resume_edu_level > 0 else 50
+
+    resume_keywords = extract_keywords(resume_text)
+    job_keywords = extract_keywords(job_text)
+    if len(job_keywords) > 0:
+        keyword_match_pct = int(len(resume_keywords.intersection(job_keywords)) / len(job_keywords) * 100)
+    else:
+        keyword_match_pct = 0
+
+    project_hits = extract_project_relevance(resume_text)
+    job_project_hits = extract_project_relevance(job_text)
+    project_relevance_pct = compute_project_score(project_hits, job_project_hits)
+
+    resume_strength = compute_resume_strength(resume_text, resume_skills)
+    ats_score = compute_ats_compatibility(resume_text)
+
+    job_fit_score = int(
+        skill_match_pct * 0.50 +
+        experience_match_pct * 0.20 +
+        education_match_pct * 0.10 +
+        keyword_match_pct * 0.10 +
+        project_relevance_pct * 0.10
+    )
+
+    fit_category = resume_match_level(job_fit_score)
 
     flags = detect_fake_phrases(job_text)
     if len(flags) == 0:
@@ -492,15 +720,37 @@ def analyze():
     else:
         risk = "High"
 
+    section_complete = {
+        'summary': bool(re.search(r"\b(summary|objective)\b", resume_text, re.I)),
+        'skills': bool(resume_skills),
+        'experience': bool(re.search(r"\b(experience|work\s+history|professional\s+experience)\b", resume_text, re.I)),
+        'education': bool(re.search(r"\b(education|degree|bachelor|master|phd|diploma)\b", resume_text, re.I)),
+        'projects': bool(project_hits)
+    }
+
+    career_readiness = int((resume_strength + job_fit_score + ats_score) / 3)
+    recommended_skills = sorted(job_skills.difference(resume_skills))
+
     return render_template(
         "result.html",
-        score=score,
+        score=job_fit_score,
         matched=sorted(matched),
         missing=sorted(missing),
         resume_skills=sorted(resume_skills),
         job_skills=sorted(job_skills),
         risk=risk,
         flags=flags,
+        skill_match_pct=skill_match_pct,
+        experience_match_pct=experience_match_pct,
+        education_match_pct=education_match_pct,
+        keyword_match_pct=keyword_match_pct,
+        project_relevance_pct=project_relevance_pct,
+        resume_strength=resume_strength,
+        ats_score=ats_score,
+        career_readiness=career_readiness,
+        fit_category=fit_category,
+        section_complete=section_complete,
+        recommended_skills=recommended_skills,
     )
 
 

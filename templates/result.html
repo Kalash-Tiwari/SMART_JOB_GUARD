@@ -1,22 +1,74 @@
 {% extends "base.html" %}
-{% block title %}Job Fit Result – Smart Job Guard{% endblock %}
+{% block title %}Job Fit Analysis Result – Smart Job Guard{% endblock %}
 {% block content %}
-  <h1>Analysis Result</h1>
+  <h1>Job Fit Analysis Result</h1>
 
   <div class="card">
-    <h2>Job Fit Score: <span class="score">{{ score }}%</span></h2>
-    <p><strong>Matched skills:</strong> {% if matched %}{{ matched|join(', ') }}{% else %}None{% endif %}</p>
-    <p><strong>Missing skills:</strong> {% if missing %}{{ missing|join(', ') }}{% else %}None{% endif %}</p>
+    <h2>Overall Job Fit Score: <span class="score" style="color:#007eff;">{{ score }}%</span></h2>
+    <p><strong>Match Category:</strong> <span style="font-weight:700;">{{ fit_category }}</span></p>
+    {% if fit_category == 'Strong Match' %}
+      <p style="color:green;">✔ Excellent match. Apply with confidence.</p>
+    {% elif fit_category == 'Moderate Match' %}
+      <p style="color:orange;">⚠ Good match, but consider strengthening skills.</p>
+    {% else %}
+      <p style="color:red;">✖ Low match. This role may not be the best fit yet.</p>
+    {% endif %}
   </div>
 
   <div class="card">
-    <h3>Fake Job Risk: <span class="risk {{ risk|lower }}">{{ risk }}</span></h3>
+    <h3>Score Breakdown by Factor</h3>
+    <table class="fit-table">
+      <thead>
+        <tr><th>Factor</th><th>Weight</th><th>Score</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Skill Matching</td><td>50%</td><td style="color:#007eff;">{{ skill_match_pct }}%</td></tr>
+        <tr><td>Experience Matching</td><td>20%</td><td style="color:#20a83f;">{{ experience_match_pct }}%</td></tr>
+        <tr><td>Education Matching</td><td>10%</td><td style="color:#f29d1f;">{{ education_match_pct }}%</td></tr>
+        <tr><td>Keyword Similarity</td><td>10%</td><td style="color:#9f4ce0;">{{ keyword_match_pct }}%</td></tr>
+        <tr><td>Project Relevance</td><td>10%</td><td style="color:#8a52bd;">{{ project_relevance_pct }}%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Skills Analysis</h3>
+    <p><strong>Matched Skills:</strong> {% if matched %}{{ matched|join(', ') }}{% else %}<em>None</em>{% endif %}</p>
+    <p><strong>Missing Skills:</strong> {% if missing %}{{ missing|join(', ') }}{% else %}<em>None</em>{% endif %}</p>
+    <p><strong>Resume Skills:</strong> {% if resume_skills %}{{ resume_skills|join(', ') }}{% else %}<em>No recognized skills found</em>{% endif %}</p>
+    <p><strong>Job Required Skills:</strong> {% if job_skills %}{{ job_skills|join(', ') }}{% else %}<em>None</em>{% endif %}</p>
+  </div>
+
+  <div class="card">
+    <h3>Fake Job Risk Assessment</h3>
+    {% if risk == 'Low' %}
+      <p style="color:green;">✅ No red flags detected. This appears to be a legitimate job posting.</p>
+    {% elif risk == 'Medium' %}
+      <p style="color:orange;">⚠ Moderate risk. Check job details before applying.</p>
+    {% else %}
+      <p style="color:red;">✖ High risk. This job posting may be suspicious.</p>
+    {% endif %}
     <p><strong>Detected red flags:</strong> {% if flags %}{{ flags|join(', ') }}{% else %}None{% endif %}</p>
   </div>
 
-  <div class="card small">
-    <p><strong>Resume-extracted skills:</strong> {% if resume_skills %}{{ resume_skills|join(', ') }}{% else %}None{% endif %}</p>
-    <p><strong>Job-extracted skills:</strong> {% if job_skills %}{{ job_skills|join(', ') }}{% else %}None{% endif %}</p>
+  <div class="card">
+    <h3>Recommendations</h3>
+    <ul>
+      <li>Develop or acquire skills in: {% if missing %}{{ missing|join(', ') }}{% else %}N/A{% endif %}</li>
+      <li>Show more relevant projects and accomplishments in the resume.</li>
+      <li>Include certifications or courses for domain-specific requirements.</li>
+      <li>Update your summary to align with job keywords and role context.</li>
+      <li>Boost experience details with metrics and outcomes wherever possible.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Resume Strength</h3>
+    <p><strong>{{ resume_strength }}%</strong> completion indicator</p>
+    <div class="strength-bar">
+      <div class="strength-fill" style="width: {{ resume_strength }}%;"></div>
+    </div>
+    <small>Based on skills, experience, education, projects and certifications.</small>
   </div>
 
   <a class="btn" href="/dashboard">&larr; Back to Dashboard</a>

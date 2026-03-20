@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Edit Resume – Smart Job Guard{% endblock %}
+{% block content %}
+<div class="resume-editor-page">
+  <div class="editor-side">
+    <div class="editor-header">
+      <h1>Edit Resume</h1>
+      <p>Template: <strong>{{ selected_template }}</strong></p>
+      <a href="{{ url_for('resume_builder') }}" class="btn btn-link">&larr; Back to templates</a>
+    </div>
+
+    <div class="stepper" id="stepper">
+      <button class="stepper-item active" data-step="1"><span>1</span> Header</button>
+      <button class="stepper-item" data-step="2"><span>2</span> Experience</button>
+      <button class="stepper-item" data-step="3"><span>3</span> Education</button>
+      <button class="stepper-item" data-step="4"><span>4</span> Skills</button>
+      <button class="stepper-item" data-step="5"><span>5</span> Summary</button>
+      <button class="stepper-item" data-step="6"><span>6</span> Additional</button>
+      <button class="stepper-item" data-step="7"><span>7</span> Review</button>
+    </div>
+
+    <form id="resumeWizard" method="post">
+      <input type="hidden" name="template_name" value="{{ selected_template }}" />
+      <input type="hidden" name="template_content" id="template_content" value="{{ template_content|escape }}" />
+      <input type="hidden" name="resume_theme" id="resume_theme" value="{{ data.resume_theme if data.resume_theme else 'blue' }}" />
+
+      <div class="wizard-step" data-step="1">
+        <h2>Header</h2>
+        <label>Name<input type="text" name="name" id="name" value="{{ data.name }}" oninput="updateLivePreview()" /></label>
+        <label>Email<input type="email" name="email" id="email" value="{{ data.email }}" oninput="updateLivePreview()" /></label>
+        <label>Phone<input type="text" name="phone" id="phone" value="{{ data.phone }}" oninput="updateLivePreview()" /></label>
+      </div>
+
+      <div class="wizard-step" data-step="2" style="display:none;">
+        <h2>Experience</h2>
+        <label><textarea name="experience" id="experience" rows="4" oninput="updateLivePreview()">{{ data.experience }}</textarea></label>
+      </div>
+
+      <div class="wizard-step" data-step="3" style="display:none;">
+        <h2>Education</h2>
+        <label><input type="text" name="education" id="education" value="{{ data.education }}" oninput="updateLivePreview()" /></label>
+      </div>
+
+      <div class="wizard-step" data-step="4" style="display:none;">
+        <h2>Skills</h2>
+        <label><textarea name="skills" id="skills" rows="4" oninput="updateLivePreview()">{{ data.skills }}</textarea></label>
+      </div>
+
+      <div class="wizard-step" data-step="5" style="display:none;">
+        <h2>Summary</h2>
+        <label><textarea name="summary" id="summary" rows="4" oninput="updateLivePreview()">{{ data.summary }}</textarea></label>
+        <div class="summary-tip">Tip: Start with action words and focus on key outcomes (e.g., "Improved", "Led", "Designed").</div>
+      </div>
+
+      <div class="wizard-step" data-step="6" style="display:none;">
+        <h2>Additional</h2>
+        <label>Projects<textarea name="projects" id="projects" rows="3" oninput="updateLivePreview()">{{ data.projects }}</textarea></label>
+        <label>Certifications<textarea name="certifications" id="certifications" rows="2" oninput="updateLivePreview()">{{ data.certifications }}</textarea></label>
+        <label>Languages<input type="text" name="languages" id="languages" value="{{ data.languages }}" oninput="updateLivePreview()" /></label>
+      </div>
+
+      <div class="wizard-step" data-step="7" style="display:none;">
+        <h2>Review</h2>
+        <p>Click Download Resume to export this to PDF.</p>
+      </div>
+
+      <div class="wizard-actions">
+        <button type="button" id="backBtn" class="btn">Back</button>
+        <button type="button" id="nextBtn" class="btn btn-primary">Next</button>
+        <button type="submit" name="action" value="download" class="btn btn-primary" style="display:none;" id="downloadBtn">Download Resume</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="preview-side">
+    <h2>Live Resume Preview</h2>
+    <div class="resume-preview" id="livePreview">{{ rendered_template|safe }}</div>
+  </div>
+</div>
+
+<script>
+  const steps = Array.from(document.querySelectorAll('.wizard-step'));
+  const stepButtons = Array.from(document.querySelectorAll('.stepper-item'));
+  let currentStep = 1;
+
+  function showStep(step) {
+    currentStep = step;
+    steps.forEach(s => s.style.display = s.dataset.step == step ? 'block' : 'none');
+    stepButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.step == step);
+      btn.classList.toggle('completed', btn.dataset.step < step);
+    });
+
+    document.getElementById('backBtn').style.display = step === 1 ? 'none' : 'inline-flex';
+    document.getElementById('nextBtn').style.display = step === 7 ? 'none' : 'inline-flex';
+    document.getElementById('downloadBtn').style.display = step === 7 ? 'inline-flex' : 'none';
+  }
+
+  stepButtons.forEach(btn => btn.addEventListener('click', () => showStep(Number(btn.dataset.step))));
+
+  document.getElementById('nextBtn').addEventListener('click', () => showStep(Math.min(7, currentStep + 1)));
+  document.getElementById('backBtn').addEventListener('click', () => showStep(Math.max(1, currentStep - 1)));
+
+  function updateLivePreview() {
+    const templateText = document.getElementById('template_content').value;
+    const data = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
+      summary: document.getElementById('summary').value,
+      education: document.getElementById('education').value,
+      skills: document.getElementById('skills').value,
+      experience: document.getElementById('experience').value,
+      projects: document.getElementById('projects').value,
+      certifications: document.getElementById('certifications').value,
+      languages: document.getElementById('languages').value
+    };
+
+    let rendered = templateText
+      .replace(/{name}/g, data.name)
+      .replace(/{email}/g, data.email)
+      .replace(/{phone}/g, data.phone)
+      .replace(/{summary}/g, data.summary)
+      .replace(/{education}/g, data.education)
+      .replace(/{skills}/g, data.skills)
+      .replace(/{experience}/g, data.experience)
+      .replace(/{projects}/g, data.projects)
+      .replace(/{certifications}/g, data.certifications)
+      .replace(/{languages}/g, data.languages);
+
+    rendered = rendered.replace(/\n/g, '<br>');
+    document.getElementById('livePreview').innerHTML = rendered;
+  }
+
+  document.querySelectorAll('#resumeWizard input, #resumeWizard textarea').forEach(el => {
+    el.addEventListener('input', updateLivePreview);
+  });
+
+  // initially
+  showStep(1);
+  updateLivePreview();
+</script>
+
+{% endblock %}
