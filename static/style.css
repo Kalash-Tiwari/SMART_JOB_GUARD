@@ -495,7 +495,7 @@ body.dark .resume-preview{background:#0b1220;border-color:#122237;}
 
 .template-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 24px;
   width: 100%;
 }
@@ -955,10 +955,7 @@ body.theme-dark {
   --accent: #4d9cff;
 }
 
-body {
-  display: flex;
-  justify-content: center;
-}
+
 body {
   margin: 0;
   padding: 0;
@@ -968,6 +965,9 @@ body {
   max-width: 1400px;   /* increase width */
   margin: 0 auto;
   padding: 20px;
+
+  display: flex;
+  justify-content: center;
 }
 .spinner {
   display: inline-block;
@@ -995,6 +995,8 @@ body {
 
 .template-full {
   width: 100%;
+  max-width: 1200px;   /* yaha increase kar sakta hai */
+  margin: 0 auto;
 }
 
   .builder-grid {
