@@ -39,9 +39,10 @@ body.theme-orange {  --text-color: #4a2a00; background: #fff7ec; --primary-borde
 body.theme-light { --text-color: #1f2a44; background: #ffffff; --primary-border: #d9dfea; --accent: #2c3e50; }
 body.theme-dark {--text-color: #e6eef8;  background: #111827; --primary-border: #2f3f5d; --accent: #4d9cff; }
 .resume-builder-shell {
-  max-width: 1400px;
   width: 100%;
-  margin: 0 auto;
+  max-width: 1200px;
+  margin: 0 auto;        /* center karega */
+  padding: 20px;
 }
 h1,h2,h3{margin:0 0 12px;}
 .navbar{
@@ -466,8 +467,13 @@ body.dark .resume-preview{background:#0b1220;border-color:#122237;}
 .template-tabs {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  align-items: center;   /* center buttons */
+  gap: 10px;
+}
+
+.tab-btn {
+  width: 60%;
+  text-align: center;
 }
 
 .tab-btn {
@@ -489,8 +495,9 @@ body.dark .resume-preview{background:#0b1220;border-color:#122237;}
 
 .template-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
+  justify-content: center;
   width: 100%;
 }
 
@@ -947,6 +954,16 @@ body.theme-dark {
   --primary-bg: #15202b;
   --primary-border: #2e3f5a;
   --accent: #4d9cff;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.resume-builder-shell {
+  width: 100%;
+  max-width: 1100px;
 }
 
 .spinner {
