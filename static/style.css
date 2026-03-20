@@ -122,8 +122,6 @@ body.dark textarea, body.dark input{background:#07101b;color:#e6eef8;border-colo
 .theme-pink{background:#e75480;color:#fff;}
 .theme-blue{background:#1e72d3;color:#fff;}
 .theme-green{background:#1f9e5a;color:#fff;}
-.theme-light{background:#f5f7fa;color:#243c5a;}
-.theme-dark{background:#2a2f3a;color:#f2f4f7;}
 
 .template-gallery-page{padding:20px;background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.08);margin:24px;}
 .template-gallery-page h1{font-size:1.8em;margin-bottom:8px;}
