@@ -488,8 +488,8 @@ body.dark .resume-preview{background:#0b1220;border-color:#122237;}
 }
 
 .template-list {
-  display: flex;
-  overflow-x: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 16px;
 }
 
@@ -968,9 +968,14 @@ body.theme-dark {
     min-height: 250px;
   }
 
-  .resume-builder-shell {
-    grid-template-columns: 1fr;
-  }
+.resume-builder-shell {
+  display: block; /* pehle grid tha */
+}
+
+.template-full {
+  width: 100%;
+  padding: 20px;
+}
 
   .builder-grid {
     grid-template-columns: 1fr;
