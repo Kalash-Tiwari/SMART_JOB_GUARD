@@ -2,6 +2,12 @@
 {% block title %}Dashboard – Smart Job Guard{% endblock %}
 {% block content %}
   <h1>Welcome, {{ user.name or user.email }}</h1>
+  <div class="stats-grid">
+    <div class="stat-card"><h3>Total Resumes</h3><p>{{ resumes|length }}</p></div>
+    <div class="stat-card"><h3>Latest Job Fit</h3><p>{{ session.get('latest_job_fit', 'N/A') }}</p></div>
+    <div class="stat-card"><h3>Resume Strength</h3><p>{{ session.get('latest_resume_strength', 'N/A') }}</p></div>
+    <div class="stat-card"><h3>Recent Activity</h3><p>{{ applications|length }} applications</p></div>
+  </div>
 
   <!-- tab navigation -->
   <div class="tabs">

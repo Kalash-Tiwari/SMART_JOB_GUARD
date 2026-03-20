@@ -69,6 +69,24 @@
       <div class="strength-fill" style="width: {{ resume_strength }}%;"></div>
     </div>
     <small>Based on skills, experience, education, projects and certifications.</small>
+    <p style="margin-top:10px;"><strong>ATS Compatibility Score:</strong> {{ ats_score }}%</p>
+    <p><strong>Career Readiness Score:</strong> {{ career_readiness }}%</p>
+  </div>
+
+  <div class="card">
+    <h3>Resume Section Completeness</h3>
+    <ul>
+      <li>Summary: {{ 'Yes' if section_complete['summary'] else 'No' }}</li>
+      <li>Skills: {{ 'Yes' if section_complete['skills'] else 'No' }}</li>
+      <li>Experience: {{ 'Yes' if section_complete['experience'] else 'No' }}</li>
+      <li>Education: {{ 'Yes' if section_complete['education'] else 'No' }}</li>
+      <li>Projects: {{ 'Yes' if section_complete['projects'] else 'No' }}</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Recommended Skills</h3>
+    <p>{% if recommended_skills %}{{ recommended_skills|join(', ') }}{% else %}All required skills covered{% endif %}</p>
   </div>
 
   <a class="btn" href="/dashboard">&larr; Back to Dashboard</a>
