@@ -1,6 +1,15 @@
 function setTheme(themeName) {
     // Purani theme hatao
-    document.body.className = "";
+     document.body.classList.remove(
+        "theme-red",
+        "theme-green",
+        "theme-blue",
+        "theme-pink",
+        "theme-purple",
+        "theme-orange",
+        "theme-light",
+        "theme-dark"
+    );
 
     // Nayi theme lagao
     document.body.classList.add(themeName);
