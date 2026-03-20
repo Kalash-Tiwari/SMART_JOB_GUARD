@@ -44,8 +44,8 @@ body.theme-light { --text-color: #1f2a44; background: #ffffff; --primary-border:
 body.theme-dark {--text-color: #e6eef8;  background: #111827; --primary-border: #2f3f5d; --accent: #4d9cff; }
 .resume-builder-shell {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;        /* center karega */
+  max-width: 1100px;   /* yaha control hai width ka */
+  margin: 40px auto;   /* center */
   padding: 20px;
 }
 h1,h2,h3{margin:0 0 12px;}
@@ -504,9 +504,9 @@ body.dark .resume-preview{background:#0b1220;border-color:#122237;}
 
 .template-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  justify-content: center;
 }
 
 .template-item {
@@ -975,8 +975,6 @@ body {
   margin: 0 auto;
   padding: 20px;
 
-  display: flex;
-  justify-content: center;
 }
 .spinner {
   display: inline-block;
@@ -1004,8 +1002,13 @@ body {
 
 .template-full {
   width: 100%;
-  max-width: 1200px;   /* yaha increase kar sakta hai */
+  background: var(--primary-bg);
+  border: 1px solid var(--primary-border);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 900px;
   margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
   .builder-grid {
