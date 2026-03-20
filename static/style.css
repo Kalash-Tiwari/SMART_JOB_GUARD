@@ -18,6 +18,10 @@ body{
   --accent: #0b63d6;
   --text-color: #111; 
 }
+body {
+  margin: 0;
+  padding: 0;
+}
 body, 
 p, 
 span, 
@@ -115,6 +119,11 @@ body.dark textarea, body.dark input{background:#07101b;color:#e6eef8;border-colo
 .main{flex:1 1 65%;padding-right:20px;}
 .sidebar{flex:0 0 30%;}
 
+.main-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 20px;
+}
 /* job card styling */
 .job-card{background:#fff;padding:10px;border-radius:6px;margin-bottom:10px;border:1px solid #e3e9f2;}
 .job-card strong{color:#0b63d6;}
