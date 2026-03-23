@@ -1068,3 +1068,48 @@ body[class*="theme-"] small {
   color: var(--text-color);
 }
 
+.builder-wrapper {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.template-item {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.template-item:hover {
+  transform: translateY(-6px);
+}
+
+.template-item.selected-template {
+  border: 2px solid #0b63d6;
+}
+
+.template-thumb {
+  height: 120px;
+  background: linear-gradient(135deg, #d8e8ff, #c0deff);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.builder-footer {
+  margin-top: 30px;
+}

@@ -1,26 +1,36 @@
 {% extends "base.html" %}
 {% block title %}Resume Builder – Smart Job Guard{% endblock %}
+
 {% block content %}
-<div class="resume-builder-shell">
-  <aside class="template-full">
-    <h2>Templates</h2>
-    <div class="template-tabs">
-      <button class="tab-btn active" data-filter="all">All</button>
-      <button class="tab-btn" data-filter="ats">ATS-Friendly</button>
-      <button class="tab-btn" data-filter="modern">Modern</button>
-      <button class="tab-btn" data-filter="minimal">Minimal</button>
-    </div>
-    <div id="templateList" class="template-list"></div>
+
+<div class="builder-wrapper">
+
+  <h2 class="page-title">Choose Your Template</h2>
+
+  <!-- Filters -->
+  <div class="template-tabs">
+    <button class="tab-btn active" data-filter="all">All</button>
+    <button class="tab-btn" data-filter="ats">ATS-Friendly</button>
+    <button class="tab-btn" data-filter="modern">Modern</button>
+    <button class="tab-btn" data-filter="minimal">Minimal</button>
+  </div>
+
+  <!-- Templates -->
+  <div id="templateList" class="template-grid"></div>
+
+  <!-- Continue -->
+  <div class="builder-footer">
     <button id="goEdit" class="btn btn-primary" disabled>
+      Continue →
+    </button>
+  </div>
 
-  </aside>
-
-  
 </div>
 
 <script>
   const templates = {{ templates|tojson|safe }};
   let selectedTemplate = templates[0];
+
   const templateTags = {
     "Modern Professional Template": "modern",
     "Clean Minimal Template": "minimal",
@@ -33,19 +43,25 @@
   function generateTemplateCard(name) {
     const card = document.createElement('div');
     card.className = 'template-item';
+
     const tag = templateTags[name] || 'all';
     card.dataset.tag = tag;
 
     card.innerHTML = `
       <div class='template-thumb'></div>
       <strong>${name}</strong>
-      <div class='template-meta'><span class='badge'>${tag.toUpperCase()}</span> <span class='rating'>4.8/5</span></div>
-      <button class='btn btn-primary select-template-btn'>Select</button>
+      <div class='template-meta'>
+        <span class='badge'>${tag.toUpperCase()}</span>
+        <span class='rating'>4.8/5</span>
+      </div>
+      <button class='btn select-template-btn'>Select</button>
     `;
 
-    card.querySelector('.select-template-btn').addEventListener('click', () => {
+    card.addEventListener('click', () => {
       selectedTemplate = name;
-      document.querySelectorAll('.template-item').forEach(i => i.classList.remove('selected-template'));
+      document.querySelectorAll('.template-item').forEach(i =>
+        i.classList.remove('selected-template')
+      );
       card.classList.add('selected-template');
       document.getElementById('goEdit').disabled = false;
     });
@@ -56,6 +72,7 @@
   function loadTemplateList(filter = 'all') {
     const list = document.getElementById('templateList');
     list.innerHTML = '';
+
     templates.forEach(name => {
       const card = generateTemplateCard(name);
       if (filter === 'all' || card.dataset.tag === filter) {
@@ -64,9 +81,8 @@
     });
   }
 
-
   document.getElementById('goEdit').addEventListener('click', () => {
-    let query = '/resume_builder/edit?template=' + encodeURIComponent(selectedTemplate || templates[0]);
+    let query = '/resume_builder/edit?template=' + encodeURIComponent(selectedTemplate);
     window.location.href = query;
   });
 
@@ -80,20 +96,11 @@
 
   loadTemplateList();
 
-  const saved = localStorage.getItem('theme');  // ✅ same key use karo
+  // theme load
+  const saved = localStorage.getItem('theme');
   if (saved) {
-  document.body.classList.remove(
-    "theme-red",
-    "theme-green",
-    "theme-blue",
-    "theme-pink",
-    "theme-purple",
-    "theme-orange",
-    "theme-light",
-    "theme-dark"
-  );
-
-  document.body.classList.add(saved);
-}
+    document.body.classList.add(saved);
+  }
 </script>
+
 {% endblock %}
