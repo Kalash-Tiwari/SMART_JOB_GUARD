@@ -724,9 +724,7 @@ def analyze():
         education_match_pct * 0.10 +
         keyword_match_pct * 0.10 +
         project_relevance_pct * 0.10
-    )
-
-    fit_category = resume_match_level(job_fit_score)
+)
 
     flags = detect_fake_phrases(job_text)
     if len(flags) == 0:
